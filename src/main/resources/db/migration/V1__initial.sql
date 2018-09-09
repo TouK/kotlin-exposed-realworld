@@ -9,7 +9,7 @@ create table users (
 
 create table articles (
   id serial primary key,
-  user_id varchar(255),
+  user_id bigint not null references users(id),
   slug varchar(255) unique,
   title varchar(255),
   description text,

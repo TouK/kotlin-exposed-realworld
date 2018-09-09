@@ -1,10 +1,11 @@
-package io.realworld.user.infrastructure.db
+package io.realworld.user.infrastructure
 
 import io.realworld.shared.infrastructure.longWrapper
 import io.realworld.shared.infrastructure.selectSingleOrNull
 import io.realworld.shared.refs.UserId
 import io.realworld.user.domain.User
 import io.realworld.user.domain.UserRepository
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
@@ -21,7 +22,8 @@ class SqlUserRepository : UserRepository {
             UserTable.selectSingleOrNull { UserTable.id eq userId }?.toUser()
 }
 
-private fun ResultRow.toUser() = User(
+fun ResultRow.toUser(userIdColumn: Column<UserId> = UserTable.id) = User(
+        id = this[userIdColumn],
         username = this[UserTable.username]
 )
 

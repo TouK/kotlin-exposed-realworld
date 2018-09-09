@@ -1,8 +1,9 @@
-package io.realworld.user.infrastructure.db
+package io.realworld.article.infrastructure
 
+import io.realworld.article.domain.ArticleGen
 import io.realworld.shared.TestDataConfiguration
 import io.realworld.shared.TestTransactionConfiguration
-import io.realworld.user.infrastructure.UserTestData
+import io.realworld.user.infrastructure.TestUserRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -14,10 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 
+
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(
         classes = [
-            SqlUserRepository::class,
+            SqlArticleRepository::class,
             TestDataConfiguration::class,
             TestTransactionConfiguration::class
         ]
@@ -26,20 +28,24 @@ import org.springframework.transaction.annotation.Transactional
         DataSourceAutoConfiguration::class,
         FlywayAutoConfiguration::class
 )
-
 @Transactional
-internal class SqlUserRepositoryTest {
+internal class SqlArticleRepositoryTest {
 
     @Autowired
-    lateinit var sqlUserRepository: SqlUserRepository
+    lateinit var testUserRepository: TestUserRepository
 
     @Autowired
-    lateinit var userTestData: UserTestData
+    lateinit var testArticleRepository: TestArticleRepository
+
+    @Autowired
+    lateinit var sqlArticleRepository: SqlArticleRepository
 
     @Test
-    fun `should find user by id`() {
-        val user = userTestData.insert()
+    fun `should find article by id`() {
+        val author = testUserRepository.insert()
+        val article = testArticleRepository.insert(ArticleGen.build(author))
 
-        assertThat(sqlUserRepository.findById(user.id)?.username).isEqualTo(user.username)
+        assertThat(sqlArticleRepository.findById(article.id)).isEqualTo(article)
     }
+
 }
