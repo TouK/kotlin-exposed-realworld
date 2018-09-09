@@ -1,0 +1,75 @@
+buildscript {
+	ext {
+		kotlinVersion = '1.2.51'
+		springBootVersion = '2.0.4.RELEASE'
+        exposedVersion ='0.10.4'
+        postgresVersion = '42.2.4'
+        junitVersion = '5.2.0'
+        assertjVersion = '3.11.1'
+        mockitoKotlinVersion = '1.6.0'
+        javafakerVersion = '0.16'
+    }
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+	}
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-spring'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'io.realworld'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+compileKotlin {
+	kotlinOptions {
+		freeCompilerArgs = ["-Xjsr305=strict"]
+		jvmTarget = "1.8"
+	}
+}
+compileTestKotlin {
+	kotlinOptions {
+		freeCompilerArgs = ["-Xjsr305=strict"]
+		jvmTarget = "1.8"
+	}
+}
+
+repositories {
+    jcenter()
+    maven { setUrl("https://dl.bintray.com/kotlin/exposed") }
+    mavenCentral()
+}
+
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-security')
+	compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-jdbc')
+    compile('org.springframework.data:spring-data-commons')
+
+    compile("org.jetbrains.exposed:exposed:$exposedVersion")
+    compile("org.jetbrains.exposed:spring-transaction:$exposedVersion")
+    compile('org.flywaydb:flyway-core')
+	compile('com.fasterxml.jackson.module:jackson-module-kotlin')
+	compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	compile("org.jetbrains.kotlin:kotlin-reflect")
+
+	runtime("org.postgresql:postgresql:$postgresVersion")
+
+    testCompile("org.assertj:assertj-core:$assertjVersion")
+    testCompile("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testCompile("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    testCompile("org.junit.jupiter:junit-jupiter-params:$junitVersion")
+    testCompile("com.nhaarman:mockito-kotlin:$mockitoKotlinVersion")
+    testCompile("com.github.javafaker:javafaker:$javafakerVersion")
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('org.springframework.security:spring-security-test')
+}
