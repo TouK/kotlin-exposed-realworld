@@ -9,10 +9,20 @@ import java.time.LocalDateTime
 @Repository
 @Transactional
 class TestArticleRepository {
-    fun insert(article: Article) =
-        ArticleTable.insert {
+
+    fun insert(article: Article): Article {
+        val articleId = ArticleTable.insert {
             it.from(article)
             it[ArticleTable.updatedAt] = LocalDateTime.now()
-        }.get(ArticleTable.id)!!.let { article.copy(id = it) }
+        }.get(ArticleTable.id)!!
 
+        article.tags.forEach { tag ->
+            ArticleTagTable.insert {
+                it[ArticleTagTable.tagId] = tag.id
+                it[ArticleTagTable.articleId] = articleId
+            }
+        }
+
+        return article.copy(id = articleId)
+    }
 }

@@ -14,6 +14,6 @@ sealed class TagId : GeneratedId<Long>() {
 }
 
 data class Tag(
-        val id: TagId,
+        val id: TagId = TagId.New,
         val name: String
 )

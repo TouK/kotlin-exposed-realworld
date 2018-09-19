@@ -1,8 +1,8 @@
 create table users (
   id serial primary key,
-  username varchar(255) unique ,
+  username varchar(255) unique,
   password varchar(255),
-  email varchar(255) unique ,
+  email varchar(255) unique,
   bio text,
   image varchar(511)
 );
@@ -30,7 +30,7 @@ create table follows (
 );
 
 create table tags (
-  id bigint primary key,
+  id serial primary key,
   name varchar(255)
 );
 

@@ -35,6 +35,9 @@ internal class SqlArticleRepositoryTest {
     lateinit var testUserRepository: TestUserRepository
 
     @Autowired
+    lateinit var testTagRepository: TestTagRepository
+
+    @Autowired
     lateinit var testArticleRepository: TestArticleRepository
 
     @Autowired
@@ -43,7 +46,8 @@ internal class SqlArticleRepositoryTest {
     @Test
     fun `should find article by id`() {
         val author = testUserRepository.insert()
-        val article = testArticleRepository.insert(ArticleGen.build(author))
+        val tag = testTagRepository.insert()
+        val article = testArticleRepository.insert(ArticleGen.build(author, listOf(tag)))
 
         assertThat(sqlArticleRepository.findById(article.id)).isEqualTo(article)
     }

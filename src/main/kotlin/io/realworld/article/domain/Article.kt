@@ -9,6 +9,6 @@ data class Article(
         val slug: String,
         val title: String,
         val author: User,
+        val tags: List<Tag>,
         val createdAt: LocalDateTime = LocalDateTime.now()
-//        val tags: List<Tag>
 )
