@@ -19,7 +19,9 @@ object ArticleTable : Table("articles") {
     val id = articleId("id").primaryKey().autoIncrement()
     val slug = text("slug")
     val title = text("title")
-    val userId = userId("user_id").references(UserTable.id)
+    val authorId = userId("user_id").references(UserTable.id)
+    val description = text("description")
+    val body = text("body")
     val createdAt = localDateTime("created_at")
     val updatedAt = localDateTime("updated_at")
 }
@@ -31,13 +33,13 @@ object ArticleTagTable : Table("article_tags") {
 
 @Component
 class SqlArticleRepository : ArticleQueryRepository {
-    override fun findById(articleId: ArticleId) =
+    override fun findBy(articleId: ArticleId) =
             (ArticleTable innerJoin ArticleTagTable innerJoin TagTable
                     innerJoin UserTable)
                     .select { ArticleTable.id eq articleId }
                     .toArticle()
 
-    override fun findBySlug(slug: String) =
+    override fun findBy(slug: String) =
             (ArticleTable innerJoin UserTable)
                     .selectSingleOrNull { ArticleTable.slug eq slug }?.toArticle()
 }
@@ -50,16 +52,22 @@ fun ResultRow.toArticle() = Article(
         id = this[ArticleTable.id],
         slug = this[ArticleTable.slug],
         title = this[ArticleTable.title],
-        author = toUser(ArticleTable.userId),
+        description = this[ArticleTable.description],
+        body = this[ArticleTable.body],
+        author = toUser(ArticleTable.authorId),
         createdAt = this[ArticleTable.createdAt],
+        updatedAt = this[ArticleTable.updatedAt],
         tags = emptyList()
 )
 
 fun UpdateBuilder<Any>.from(article: Article) = this.run {
     this[ArticleTable.slug] = article.slug
     this[ArticleTable.title] = article.title
-    this[ArticleTable.userId] = article.author.id
+    this[ArticleTable.description] = article.description
+    this[ArticleTable.body] = article.body
+    this[ArticleTable.authorId] = article.author.id
     this[ArticleTable.createdAt] = article.createdAt
+    this[ArticleTable.updatedAt] = article.updatedAt
 }
 
 fun Table.articleId(name: String) = longWrapper<ArticleId>(name, ArticleId::Persisted, ArticleId::value)

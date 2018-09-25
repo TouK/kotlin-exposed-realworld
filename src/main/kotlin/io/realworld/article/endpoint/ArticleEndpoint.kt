@@ -19,6 +19,6 @@ class ArticleEndpoint(
 
     @GetMapping("/$SLUG_PARAM")
     fun get(@PathVariable(name = SLUG_PARAM, required = true) slug: String) =
-            articleQueryRepository.getBySlug(slug).toDto()
+            articleQueryRepository.getBy(slug).toDto()
 
 }

@@ -7,6 +7,8 @@ object ArticleGen {
     fun build(user: User, tags: List<Tag> = emptyList()) = Article(
             slug = Gen.alphanumeric(10),
             title = Gen.alphanumeric(),
+            description = Gen.alphanumeric(100),
+            body = Gen.alphanumeric(1000),
             author = user,
             tags = tags
     )

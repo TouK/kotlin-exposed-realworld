@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 
-
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(
         classes = [
@@ -49,7 +48,7 @@ internal class SqlArticleRepositoryTest {
         val tag = testTagRepository.insert()
         val article = testArticleRepository.insert(ArticleGen.build(author, listOf(tag)))
 
-        assertThat(sqlArticleRepository.findById(article.id)).isEqualTo(article)
+        assertThat(sqlArticleRepository.findBy(article.id)).isEqualTo(article)
     }
 
 }

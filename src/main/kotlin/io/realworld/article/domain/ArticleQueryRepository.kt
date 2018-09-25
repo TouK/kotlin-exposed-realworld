@@ -3,8 +3,8 @@ package io.realworld.article.domain
 import io.realworld.shared.refs.ArticleId
 
 interface ArticleQueryRepository {
-    fun findById(articleId: ArticleId): Article?
-    fun findBySlug(slug: String): Article?
+    fun findBy(articleId: ArticleId): Article?
+    fun findBy(slug: String): Article?
 
-    fun getBySlug(slug: String) = findBySlug(slug) ?: throw ArticleNotFoundException()
+    fun getBy(slug: String) = findBy(slug) ?: throw ArticleNotFoundException()
 }
