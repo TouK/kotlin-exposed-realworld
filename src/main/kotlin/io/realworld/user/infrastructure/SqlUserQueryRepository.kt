@@ -4,7 +4,7 @@ import io.realworld.shared.infrastructure.longWrapper
 import io.realworld.shared.infrastructure.selectSingleOrNull
 import io.realworld.shared.refs.UserId
 import io.realworld.user.domain.User
-import io.realworld.user.domain.UserRepository
+import io.realworld.user.domain.UserQueryRepository
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
@@ -17,7 +17,7 @@ object UserTable : Table("users") {
 }
 
 @Component
-class SqlUserRepository : UserRepository {
+class SqlUserQueryRepository : UserQueryRepository {
     override fun findById(userId: UserId) =
             UserTable.selectSingleOrNull { UserTable.id eq userId }?.toUser()
 }

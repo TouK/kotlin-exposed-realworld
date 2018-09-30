@@ -15,18 +15,20 @@ data class ArticleDto(
         val createdAt: LocalDateTime,
         val updatedAt: LocalDateTime,
         val favorited: Boolean,
+        val favoritesCount: Int,
         val author: UserDto
 )
 
-fun Article.toDto() = ArticleDto(
+fun Article.toDto(favorited: Boolean, favoritesCount: Int) = ArticleDto(
         slug = this.slug,
         title = this.title,
-        description = "",
-        body = "",
+        description = this.description,
+        body = this.body,
         tagList = this.tags.toDto(),
         createdAt = this.createdAt,
         updatedAt = this.createdAt,
-        favorited = false,
+        favorited = favorited,
+        favoritesCount = favoritesCount,
         author = this.author.toDto()
 )
 

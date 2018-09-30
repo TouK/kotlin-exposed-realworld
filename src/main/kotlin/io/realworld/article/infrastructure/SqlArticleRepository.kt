@@ -1,7 +1,7 @@
 package io.realworld.article.infrastructure
 
 import io.realworld.article.domain.Article
-import io.realworld.article.domain.ArticleQueryRepository
+import io.realworld.article.domain.ArticleReadRepository
 import io.realworld.shared.infrastructure.localDateTime
 import io.realworld.shared.infrastructure.longWrapper
 import io.realworld.shared.infrastructure.selectSingleOrNull
@@ -32,7 +32,7 @@ object ArticleTagTable : Table("article_tags") {
 }
 
 @Component
-class SqlArticleRepository : ArticleQueryRepository {
+class SqlArticleRepository : ArticleReadRepository {
     override fun findBy(articleId: ArticleId) =
             (ArticleTable innerJoin ArticleTagTable innerJoin TagTable
                     innerJoin UserTable)

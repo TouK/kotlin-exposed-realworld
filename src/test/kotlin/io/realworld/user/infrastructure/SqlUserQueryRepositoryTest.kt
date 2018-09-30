@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(
         classes = [
-            SqlUserRepository::class,
+            SqlUserQueryRepository::class,
             TestDataConfiguration::class,
             TestTransactionConfiguration::class
         ]
@@ -27,10 +27,10 @@ import org.springframework.transaction.annotation.Transactional
 )
 
 @Transactional
-internal class SqlUserRepositoryTest {
+internal class SqlUserQueryRepositoryTest {
 
     @Autowired
-    lateinit var sqlUserRepository: SqlUserRepository
+    lateinit var sqlUserRepository: SqlUserQueryRepository
 
     @Autowired
     lateinit var testUserRepository: TestUserRepository
