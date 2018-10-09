@@ -1,11 +1,7 @@
-package io.realworld.comment.infrastructure
+package io.realworld.user.infrastructure
 
-import io.realworld.article.domain.ArticleGen
-import io.realworld.article.infrastructure.TestArticleRepository
-import io.realworld.comment.domain.CommentGen
 import io.realworld.shared.TestDataConfiguration
 import io.realworld.shared.TestTransactionConfiguration
-import io.realworld.user.infrastructure.TestUserRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -20,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(
         classes = [
-            SqlCommentRepository::class,
+            SqlUserReadRepository::class,
             TestDataConfiguration::class,
             TestTransactionConfiguration::class
         ]
@@ -29,28 +25,20 @@ import org.springframework.transaction.annotation.Transactional
         DataSourceAutoConfiguration::class,
         FlywayAutoConfiguration::class
 )
+
 @Transactional
-internal class SqlCommentRepositoryTest {
+internal class SqlUserReadRepositoryTest {
+
+    @Autowired
+    lateinit var sqlUserRepository: SqlUserReadRepository
 
     @Autowired
     lateinit var testUserRepository: TestUserRepository
 
-    @Autowired
-    lateinit var testArticleRepository: TestArticleRepository
-
-    @Autowired
-    lateinit var testCommentRepository: TestCommentRepository
-
-    @Autowired
-    lateinit var sqlCommentRepository: SqlCommentRepository
-
     @Test
-    fun `should load comments for article`() {
-        val author = testUserRepository.insert()
-        val commenter = testUserRepository.insert()
-        val article = testArticleRepository.insert(ArticleGen.build(author))
-        val comment = testCommentRepository.insert(CommentGen.build(article = article, author = commenter))
+    fun `should find user by id`() {
+        val user = testUserRepository.insert()
 
-        assertThat(sqlCommentRepository.findAllByArticleId(article.id)).containsExactly(comment)
+        assertThat(sqlUserRepository.findById(user.id)).isEqualTo(user)
     }
 }

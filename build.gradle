@@ -4,6 +4,7 @@ buildscript {
 		springBootVersion = '2.0.4.RELEASE'
         exposedVersion ='0.10.4'
         postgresVersion = '42.2.4'
+        jjwtVersion = '0.9.0'
         junitVersion = '5.2.0'
         assertjVersion = '3.11.1'
         mockitoKotlinVersion = '1.6.0'
@@ -60,6 +61,7 @@ dependencies {
 	compile('com.fasterxml.jackson.module:jackson-module-kotlin')
 	compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	compile("org.jetbrains.kotlin:kotlin-reflect")
+	compile("io.jsonwebtoken:jjwt:$jjwtVersion")
 
 	runtime("org.postgresql:postgresql:$postgresVersion")
 

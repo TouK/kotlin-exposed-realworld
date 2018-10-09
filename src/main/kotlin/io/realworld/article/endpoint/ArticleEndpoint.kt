@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(ArticleEndpoint.PATH)
-class ArticleEndpoint(
-        private val articleQueryService: ArticleQueryService
-) {
+class ArticleEndpoint(private val articleQueryService: ArticleQueryService) {
 
     companion object {
         const val PATH = "/articles"

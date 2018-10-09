@@ -9,6 +9,11 @@ data class UserDto(
         val following: Boolean
 )
 
+data class LoginDto(
+        val username: String,
+        val password: String
+)
+
 fun User.toDto() = UserDto(
         username = this.username,
         bio = "",

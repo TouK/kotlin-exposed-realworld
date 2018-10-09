@@ -3,7 +3,7 @@ package io.realworld.comment.infrastructure
 import io.realworld.article.infrastructure.ArticleTable
 import io.realworld.article.infrastructure.articleId
 import io.realworld.comment.domain.Comment
-import io.realworld.comment.domain.CommentRepository
+import io.realworld.comment.domain.CommentReadRepository
 import io.realworld.shared.infrastructure.localDateTime
 import io.realworld.shared.infrastructure.longWrapper
 import io.realworld.shared.refs.ArticleId
@@ -26,7 +26,7 @@ object CommentTable : Table("comments") {
 }
 
 @Component
-class SqlCommentRepository : CommentRepository {
+class SqlCommentReadRepository : CommentReadRepository {
     override fun findAllByArticleId(articleId: ArticleId) =
             (CommentTable innerJoin UserTable)
                     .select { CommentTable.articleId eq articleId }
