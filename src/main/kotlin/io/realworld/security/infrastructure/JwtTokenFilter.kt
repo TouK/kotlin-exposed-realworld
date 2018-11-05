@@ -11,8 +11,10 @@ import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-class JwtTokenFilter(private val userReadRepository: UserReadRepository,
-                     private val jwtService: JwtService) : OncePerRequestFilter() {
+class JwtTokenFilter(
+        private val userReadRepository: UserReadRepository,
+        private val jwtService: JwtService
+) : OncePerRequestFilter() {
 
     companion object {
         const val AUTH_HEADER = "Authorization"
@@ -22,7 +24,7 @@ class JwtTokenFilter(private val userReadRepository: UserReadRepository,
         getTokenString(request.getHeader(AUTH_HEADER))?.let { token ->
             jwtService.getSubFromToken(token)?.let { id ->
                   if (SecurityContextHolder.getContext().authentication == null) {
-                      userReadRepository.findById(id)?.let { user ->
+                      userReadRepository.findBy(id)?.let { user ->
                           val authenticationToken = UsernamePasswordAuthenticationToken(
                                   user, null,
                                   emptyList<GrantedAuthority>())

@@ -14,4 +14,5 @@ object Gen {
     fun alphanumeric(count: Int = 24): String = faker.lorem().characters(count, true)
     fun digits(count: Int = 9): String = faker.number().digits(count)
 
+    fun email() = "${Gen.alphanumeric(count = 5)}@${Gen.alphanumeric(count = 10)}.pl"
 }

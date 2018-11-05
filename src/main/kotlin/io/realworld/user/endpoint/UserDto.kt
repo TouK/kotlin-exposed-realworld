@@ -2,21 +2,43 @@ package io.realworld.user.endpoint
 
 import io.realworld.user.domain.User
 
+data class UserResponse(
+        val user: UserDto
+)
+
 data class UserDto(
+        val email: String,
         val username: String,
         val bio: String,
         val image: String,
-        val following: Boolean
+        val following: Boolean,
+        val token: String?
+)
+
+data class LoginRequest(
+        val user: LoginDto
 )
 
 data class LoginDto(
-        val username: String,
+        val email: String,
         val password: String
 )
 
-fun User.toDto() = UserDto(
+data class RegisterRequest(
+        val user: RegisterUserDto
+)
+
+data class RegisterUserDto(
+        val username: String,
+        val email: String,
+        val password: String
+)
+
+fun User.toDto(token: String? = null) = UserDto(
+        email = this.email,
         username = this.username,
         bio = "",
         image = "",
-        following = false
+        following = false,
+        token = token
 )

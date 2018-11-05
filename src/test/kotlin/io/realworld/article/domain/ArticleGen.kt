@@ -9,7 +9,7 @@ object ArticleGen {
             title = Gen.alphanumeric(),
             description = Gen.alphanumeric(100),
             body = Gen.alphanumeric(1000),
-            author = user,
+            authorId = user.id,
             tags = tags
     )
 }

@@ -13,20 +13,17 @@ import java.util.Date
 class JwtsService(@param:Value("\${realworld.jwt.secret}") private val secret: String,
                   @param:Value("\${realworld.jwt.sessionTime}") private val sessionTime: Int) : JwtService {
 
-    override fun toToken(user: User): String {
-        return Jwts.builder()
-                .setSubject(user.id.toString())
-                .setExpiration(expireTimeFromNow())
-                .signWith(SignatureAlgorithm.HS512, secret)
-                .compact()
-    }
+    override fun toToken(user: User) = Jwts.builder()
+            .setSubject(user.id.value.toString())
+            .setExpiration(expireTimeFromNow())
+            .signWith(SignatureAlgorithm.HS512, secret)
+            .compact()
 
     override fun getSubFromToken(token: String): UserId? {
         val claimsJws = Jwts.parser().setSigningKey(secret).parseClaimsJws(token)
         return UserId.Persisted(claimsJws.body.subject.toLong())
     }
 
-    private fun expireTimeFromNow(): Date {
-        return Date(System.currentTimeMillis() + sessionTime * 1000)
-    }
+    private fun expireTimeFromNow() =
+            Date(System.currentTimeMillis() + sessionTime * 1000)
 }

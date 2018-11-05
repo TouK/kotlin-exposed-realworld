@@ -1,9 +1,8 @@
-package io.realworld.article.endpoint
+package io.realworld.article.query
 
 import io.realworld.article.domain.Article
 import io.realworld.article.domain.Tag
 import io.realworld.user.endpoint.UserDto
-import io.realworld.user.endpoint.toDto
 import java.time.LocalDateTime
 
 data class ArticleDto(
@@ -19,7 +18,7 @@ data class ArticleDto(
         val author: UserDto
 )
 
-fun Article.toDto(favorited: Boolean, favoritesCount: Int) = ArticleDto(
+fun Article.toDto(author: UserDto, favorited: Boolean, favoritesCount: Int) = ArticleDto(
         slug = this.slug,
         title = this.title,
         description = this.description,
@@ -29,7 +28,7 @@ fun Article.toDto(favorited: Boolean, favoritesCount: Int) = ArticleDto(
         updatedAt = this.createdAt,
         favorited = favorited,
         favoritesCount = favoritesCount,
-        author = this.author.toDto()
+        author = author
 )
 
 fun List<Tag>.toDto() = this.map(Tag::name)

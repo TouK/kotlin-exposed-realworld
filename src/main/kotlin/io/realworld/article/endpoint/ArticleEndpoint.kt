@@ -1,6 +1,6 @@
 package io.realworld.article.endpoint
 
-import io.realworld.article.domain.ArticleQueryService
+import io.realworld.article.query.ArticleQueryService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping

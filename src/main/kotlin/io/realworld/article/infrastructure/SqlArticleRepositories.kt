@@ -2,12 +2,13 @@ package io.realworld.article.infrastructure
 
 import io.realworld.article.domain.Article
 import io.realworld.article.domain.ArticleReadRepository
+import io.realworld.article.domain.Tag
+import io.realworld.article.domain.TagId
 import io.realworld.shared.infrastructure.localDateTime
 import io.realworld.shared.infrastructure.longWrapper
 import io.realworld.shared.infrastructure.selectSingleOrNull
 import io.realworld.shared.refs.ArticleId
 import io.realworld.user.infrastructure.UserTable
-import io.realworld.user.infrastructure.toUser
 import io.realworld.user.infrastructure.userId
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
@@ -31,18 +32,27 @@ object ArticleTagTable : Table("article_tags") {
     val articleId = articleId("article_id").references(ArticleTable.id)
 }
 
+object TagTable : Table("tags") {
+    val id = tagId("id").primaryKey().autoIncrement()
+    val name = text("name")
+}
+
 @Component
-class SqlArticleRepository : ArticleReadRepository {
+class SqlArticleReadRepository : ArticleReadRepository {
     override fun findBy(articleId: ArticleId) =
-            (ArticleTable innerJoin ArticleTagTable innerJoin TagTable
-                    innerJoin UserTable)
+            (ArticleTable innerJoin ArticleTagTable innerJoin TagTable)
                     .select { ArticleTable.id eq articleId }
                     .toArticle()
 
     override fun findBy(slug: String) =
-            (ArticleTable innerJoin UserTable)
+            ArticleTable
                     .selectSingleOrNull { ArticleTable.slug eq slug }?.toArticle()
 }
+
+fun ResultRow.toTag() = Tag(
+        id = this[TagTable.id],
+        name = this[TagTable.name]
+)
 
 fun Iterable<ResultRow>.toArticle() = this.fold(this.first().toArticle()) { article, resultRow ->
         article.copy(tags = article.tags + resultRow.toTag())
@@ -54,7 +64,7 @@ fun ResultRow.toArticle() = Article(
         title = this[ArticleTable.title],
         description = this[ArticleTable.description],
         body = this[ArticleTable.body],
-        author = toUser(ArticleTable.authorId),
+        authorId = this[ArticleTable.authorId],
         createdAt = this[ArticleTable.createdAt],
         updatedAt = this[ArticleTable.updatedAt],
         tags = emptyList()
@@ -65,9 +75,11 @@ fun UpdateBuilder<Any>.from(article: Article) = this.run {
     this[ArticleTable.title] = article.title
     this[ArticleTable.description] = article.description
     this[ArticleTable.body] = article.body
-    this[ArticleTable.authorId] = article.author.id
+    this[ArticleTable.authorId] = article.authorId
     this[ArticleTable.createdAt] = article.createdAt
     this[ArticleTable.updatedAt] = article.updatedAt
 }
 
 fun Table.articleId(name: String) = longWrapper<ArticleId>(name, ArticleId::Persisted, ArticleId::value)
+
+fun Table.tagId(name: String) = longWrapper<TagId>(name, TagId::Persisted, TagId::value)

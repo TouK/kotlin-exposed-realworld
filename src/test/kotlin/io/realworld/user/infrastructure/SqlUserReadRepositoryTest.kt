@@ -39,6 +39,6 @@ internal class SqlUserReadRepositoryTest {
     fun `should find user by id`() {
         val user = testUserRepository.insert()
 
-        assertThat(sqlUserRepository.findById(user.id)).isEqualTo(user)
+        assertThat(sqlUserRepository.findBy(user.id)).isEqualTo(user)
     }
 }

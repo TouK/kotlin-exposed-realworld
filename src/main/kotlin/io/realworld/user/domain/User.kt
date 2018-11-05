@@ -5,5 +5,6 @@ import io.realworld.shared.refs.UserId
 data class User(
         val id: UserId = UserId.New,
         val username: String,
+        val email: String,
         val password: String
 )

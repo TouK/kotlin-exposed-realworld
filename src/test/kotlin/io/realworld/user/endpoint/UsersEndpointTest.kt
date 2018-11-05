@@ -27,12 +27,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @ExtendWith(SpringExtension::class)
-@WebMvcTest(UserEndpoint::class, UserConfiguration::class, SecurityConfiguration::class)
+@WebMvcTest(UsersEndpoint::class, UserConfiguration::class, SecurityConfiguration::class)
 @ImportAutoConfiguration(
         DataSourceAutoConfiguration::class,
         FlywayAutoConfiguration::class
 )
-class UserEndpointTest {
+class UsersEndpointTest {
 
     @Autowired
     private lateinit var mvc: MockMvc
@@ -49,12 +49,12 @@ class UserEndpointTest {
     @Test
     fun `should login on correct credentials`() {
         val user = UserGen.build().copy(id = UserId.Persisted(Gen.id()))
-        whenever(userReadRepository.findByUsername(user.username)).thenReturn(user)
+        whenever(userReadRepository.findByEmail(user.email)).thenReturn(user)
         whenever(passwordEncoder.matches(eq(user.password), any())).thenReturn(true)
 
         mvc.perform(
-                post("${UserEndpoint.PATH}/${UserEndpoint.LOGIN_PATH}")
-                        .jsonBody(LoginDto(user.username, user.password)))
+                post("${UsersEndpoint.PATH}/${UsersEndpoint.LOGIN_PATH}")
+                        .jsonBody(LoginRequest(user = LoginDto(user.email, user.password))))
                 .andExpect(status().isOk)
     }
 

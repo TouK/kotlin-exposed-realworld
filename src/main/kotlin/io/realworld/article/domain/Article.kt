@@ -1,7 +1,7 @@
 package io.realworld.article.domain
 
 import io.realworld.shared.refs.ArticleId
-import io.realworld.user.domain.User
+import io.realworld.shared.refs.UserId
 import java.time.LocalDateTime
 
 data class Article(
@@ -10,7 +10,7 @@ data class Article(
         val title: String,
         val description: String,
         val body: String,
-        val author: User,
+        val authorId: UserId,
         val tags: List<Tag>,
         val createdAt: LocalDateTime = LocalDateTime.now(),
         val updatedAt: LocalDateTime = LocalDateTime.now()

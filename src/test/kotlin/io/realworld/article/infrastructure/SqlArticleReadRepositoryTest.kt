@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(
         classes = [
-            SqlArticleRepository::class,
+            SqlArticleReadRepository::class,
             TestDataConfiguration::class,
             TestTransactionConfiguration::class
         ]
@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class SqlArticleRepositoryTest {
+internal class SqlArticleReadRepositoryTest {
 
     @Autowired
     lateinit var testUserRepository: TestUserRepository
@@ -40,7 +40,7 @@ internal class SqlArticleRepositoryTest {
     lateinit var testArticleRepository: TestArticleRepository
 
     @Autowired
-    lateinit var sqlArticleRepository: SqlArticleRepository
+    lateinit var sqlArticleReadRepository: SqlArticleReadRepository
 
     @Test
     fun `should find article by id`() {
@@ -48,7 +48,7 @@ internal class SqlArticleRepositoryTest {
         val tag = testTagRepository.insert()
         val article = testArticleRepository.insert(ArticleGen.build(author, listOf(tag)))
 
-        assertThat(sqlArticleRepository.findBy(article.id)).isEqualTo(article)
+        assertThat(sqlArticleReadRepository.findBy(article.id)).isEqualTo(article)
     }
 
 }
