@@ -1,0 +1,42 @@
+image: java:8-jdk
+
+services:
+  - name: postgres:10
+    alias: postgres
+
+variables:
+  POSTGRES_USER: realworld
+  POSTGRES_PASSWORD: realword
+  POSTGRES_DB: realworld
+  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/$POSTGRES_DB
+  SPRING_DATASOURCE_USERNAME: $POSTGRES_USER
+  SPRING_DATASOURCE_PASSWORD: $POSTGRES_PASSWORD
+
+stages:
+  - build
+  - test
+  - deploy
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
+build:
+  stage: build
+  script:
+    - ./gradlew assemble
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 week
+  only:
+    - master
+
+test:
+  stage: test
+  script:
+    - ./gradlew check

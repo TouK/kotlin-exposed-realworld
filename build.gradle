@@ -5,7 +5,7 @@ buildscript {
         exposedVersion ='0.10.4'
         postgresVersion = '42.2.4'
         jjwtVersion = '0.9.0'
-        junitVersion = '5.2.0'
+        junitVersion = '5.3.1'
         assertjVersion = '3.11.1'
         mockitoKotlinVersion = '1.6.0'
         javafakerVersion = '0.16'
@@ -74,4 +74,11 @@ dependencies {
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.security:spring-security-test')
+}
+
+test {
+	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
 }
