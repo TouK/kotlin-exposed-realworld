@@ -3,7 +3,7 @@ package io.realworld.article.endpoint
 import io.realworld.article.domain.Article
 import io.realworld.article.domain.Tag
 import io.realworld.user.endpoint.UserDto
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 data class ArticlesResponse(
         val articles: List<ArticleDto>,
@@ -22,8 +22,8 @@ data class ArticleDto(
         val description: String,
         val body: String,
         val tagList: List<String>,
-        val createdAt: LocalDateTime,
-        val updatedAt: LocalDateTime,
+        val createdAt: ZonedDateTime,
+        val updatedAt: ZonedDateTime,
         val favorited: Boolean,
         val favoritesCount: Int,
         val author: UserDto

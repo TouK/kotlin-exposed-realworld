@@ -4,9 +4,9 @@ import io.realworld.article.domain.Article
 import io.realworld.article.domain.ArticleReadRepository
 import io.realworld.article.domain.ArticleWriteRepository
 import io.realworld.article.domain.TagId
-import io.realworld.shared.infrastructure.localDateTime
 import io.realworld.shared.infrastructure.longWrapper
 import io.realworld.shared.infrastructure.selectSingleOrNull
+import io.realworld.shared.infrastructure.zonedDateTime
 import io.realworld.shared.refs.ArticleId
 import io.realworld.user.infrastructure.UserTable
 import io.realworld.user.infrastructure.userId
@@ -25,8 +25,8 @@ object ArticleTable : Table("articles") {
     val authorId = userId("user_id").references(UserTable.id)
     val description = text("description")
     val body = text("body")
-    val createdAt = localDateTime("created_at")
-    val updatedAt = localDateTime("updated_at")
+    val createdAt = zonedDateTime("created_at")
+    val updatedAt = zonedDateTime("updated_at")
 }
 
 object ArticleTagTable : Table("article_tags") {
@@ -56,17 +56,16 @@ class SqlArticleReadRepository : ArticleReadRepository {
 class SqlArticleWriteRepository : ArticleWriteRepository {
 
     override fun save(article: Article): Article {
-        val article = ArticleTable.insert { it.from(article) }[ArticleTable.id]!!
+        val savedArticle = ArticleTable.insert { it.from(article) }[ArticleTable.id]!!
                 .let { article.copy(id = it) }
-        article.tags.forEach { tag ->
+        savedArticle.tags.forEach { tag ->
             ArticleTagTable.insert {
                 it[ArticleTagTable.tagId] = tag.id
-                it[ArticleTagTable.articleId] = article.id
+                it[ArticleTagTable.articleId] = savedArticle.id
             }
         }
-        return article
+        return savedArticle
     }
-
 }
 
 fun Iterable<ResultRow>.toArticle() = this.fold(this.first().toArticle()) { article, resultRow ->

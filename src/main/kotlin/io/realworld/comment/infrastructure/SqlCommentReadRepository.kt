@@ -4,8 +4,8 @@ import io.realworld.article.infrastructure.ArticleTable
 import io.realworld.article.infrastructure.articleId
 import io.realworld.comment.domain.Comment
 import io.realworld.comment.domain.CommentReadRepository
-import io.realworld.shared.infrastructure.localDateTime
 import io.realworld.shared.infrastructure.longWrapper
+import io.realworld.shared.infrastructure.zonedDateTime
 import io.realworld.shared.refs.ArticleId
 import io.realworld.shared.refs.CommentId
 import io.realworld.user.infrastructure.UserTable
@@ -21,8 +21,8 @@ object CommentTable : Table("comments") {
     val id = commentId("id").primaryKey().autoIncrement()
     val userId = userId("user_id").references(UserTable.id)
     val articleId = articleId("article_id").references(ArticleTable.id)
-    val createdAt = localDateTime("created_at")
-    val updatedAt = localDateTime("updated_at")
+    val createdAt = zonedDateTime("created_at")
+    val updatedAt = zonedDateTime("updated_at")
 }
 
 @Component
