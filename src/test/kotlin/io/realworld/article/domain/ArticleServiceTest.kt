@@ -1,9 +1,7 @@
-package io.realworld.article.infrastructure
+package io.realworld.article.domain
 
-import io.realworld.article.domain.ArticleGen
-import io.realworld.article.domain.ArticleWriteRepository
-import io.realworld.article.domain.TagGen
-import io.realworld.article.domain.TagWriteRepository
+import io.realworld.article.endpoint.CreateArticleDtoGen
+import io.realworld.article.infrastructure.ArticleConfiguration
 import io.realworld.shared.TestDataConfiguration
 import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.user.infrastructure.TestUserRepository
@@ -15,6 +13,8 @@ import org.springframework.boot.autoconfigure.ImportAutoConfiguration
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 
@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional
 @SpringBootTest(
         classes = [
             ArticleConfiguration::class,
+            TestUserRepository::class,
             TestDataConfiguration::class,
             TestTransactionConfiguration::class
         ]
@@ -31,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class SqlArticleReadRepositoryTest {
+internal class ArticleServiceTest {
 
     @Autowired
     lateinit var testUserRepository: TestUserRepository
@@ -40,18 +41,26 @@ internal class SqlArticleReadRepositoryTest {
     lateinit var tagWriteRepository: TagWriteRepository
 
     @Autowired
-    lateinit var articleWriteRepository: ArticleWriteRepository
-
-    @Autowired
-    lateinit var sqlArticleReadRepository: SqlArticleReadRepository
+    lateinit var articleService: ArticleService
 
     @Test
-    fun `should find article by id`() {
-        val author = testUserRepository.insert()
-        val tag = tagWriteRepository.save(TagGen.build())
-        val article = articleWriteRepository.save(ArticleGen.build(author, listOf(tag)))
+    fun `should save article`() {
+        val user = testUserRepository.insert()
+        SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(user, null, emptyList())
 
-        assertThat(sqlArticleReadRepository.findBy(article.id)).isEqualTo(article)
+        val tagAlpha = TagGen.build()
+        val tagBravo = TagGen.build()
+        val tagNames = arrayOf(tagAlpha, tagBravo).map(Tag::name)
+
+        tagWriteRepository.save(tagAlpha)
+
+        val createArticleDto = CreateArticleDtoGen.build(tags = tagNames)
+
+        val articleDto = articleService.create(createArticleDto)
+
+        assertThat(articleDto.title).isEqualTo(createArticleDto.title)
+        assertThat(articleDto.description).isEqualTo(createArticleDto.description)
+        assertThat(articleDto.body).isEqualTo(createArticleDto.body)
+        assertThat(articleDto.tagList).isEqualTo(tagNames)
     }
-
 }

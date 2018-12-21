@@ -1,7 +1,8 @@
 package io.realworld.comment.infrastructure
 
 import io.realworld.article.domain.ArticleGen
-import io.realworld.article.infrastructure.TestArticleRepository
+import io.realworld.article.domain.ArticleWriteRepository
+import io.realworld.article.infrastructure.ArticleConfiguration
 import io.realworld.comment.domain.CommentGen
 import io.realworld.shared.TestDataConfiguration
 import io.realworld.shared.TestTransactionConfiguration
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional
 @SpringBootTest(
         classes = [
             SqlCommentReadRepository::class,
+            ArticleConfiguration::class,
             TestDataConfiguration::class,
             TestTransactionConfiguration::class
         ]
@@ -36,7 +38,7 @@ internal class SqlCommentReadRepositoryTest {
     lateinit var testUserRepository: TestUserRepository
 
     @Autowired
-    lateinit var testArticleRepository: TestArticleRepository
+    lateinit var articleWriteRepository: ArticleWriteRepository
 
     @Autowired
     lateinit var testCommentRepository: TestCommentRepository
@@ -48,7 +50,7 @@ internal class SqlCommentReadRepositoryTest {
     fun `should load comments for article`() {
         val author = testUserRepository.insert()
         val commenter = testUserRepository.insert()
-        val article = testArticleRepository.insert(ArticleGen.build(author))
+        val article = articleWriteRepository.save(ArticleGen.build(author))
         val comment = testCommentRepository.insert(CommentGen.build(article = article, author = commenter))
 
         assertThat(sqlCommentRepository.findAllByArticleId(article.id)).containsExactly(comment)

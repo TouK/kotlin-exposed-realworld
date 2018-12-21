@@ -2,9 +2,11 @@ package io.realworld.security.infrastructure
 
 import io.realworld.security.domain.JwtService
 import io.realworld.user.domain.UserReadRepository
+import io.realworld.user.infrastructure.UserConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -21,6 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @Configuration
 @ComponentScan(basePackages = ["io.realworld.security"])
 @EnableWebSecurity
+@Import(UserConfiguration::class)
 class SecurityConfiguration(private val userReadRepository: UserReadRepository,
                             private val jwtService: JwtService) : WebSecurityConfigurerAdapter() {
 

@@ -3,6 +3,7 @@ package io.realworld.article.infrastructure
 import io.realworld.article.domain.ArticleFavoriteReadRepository
 import io.realworld.article.domain.ArticleFavoriteWriteRepository
 import io.realworld.article.domain.ArticleGen
+import io.realworld.article.domain.ArticleWriteRepository
 import io.realworld.shared.TestDataConfiguration
 import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.user.domain.UserGen
@@ -21,8 +22,7 @@ import org.springframework.transaction.annotation.Transactional
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(
         classes = [
-            SqlArticleFavoriteReadRepository::class,
-            SqlArticleFavoriteWriteRepository::class,
+            ArticleConfiguration::class,
             TestDataConfiguration::class,
             TestTransactionConfiguration::class
         ]
@@ -38,7 +38,7 @@ internal class SqlArticleFavoriteRepositoryTest {
     lateinit var testUserRepository: TestUserRepository
 
     @Autowired
-    lateinit var testArticleRepository: TestArticleRepository
+    lateinit var articleWriteRepository: ArticleWriteRepository
 
     @Autowired
     lateinit var articleFavoriteWriteRepository: ArticleFavoriteWriteRepository
@@ -49,7 +49,7 @@ internal class SqlArticleFavoriteRepositoryTest {
     @Test
     fun `should favorite and unfavorite article`() {
         val author = testUserRepository.insert(UserGen.build())
-        val article = testArticleRepository.insert(ArticleGen.build(author))
+        val article = articleWriteRepository.save(ArticleGen.build(author))
         val user = testUserRepository.insert(UserGen.build())
 
         articleFavoriteWriteRepository.addFor(article.id, user.id)

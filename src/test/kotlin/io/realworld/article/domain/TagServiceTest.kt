@@ -1,12 +1,8 @@
-package io.realworld.article.infrastructure
+package io.realworld.article.domain
 
-import io.realworld.article.domain.ArticleGen
-import io.realworld.article.domain.ArticleWriteRepository
-import io.realworld.article.domain.TagGen
-import io.realworld.article.domain.TagWriteRepository
+import io.realworld.article.infrastructure.ArticleConfiguration
 import io.realworld.shared.TestDataConfiguration
 import io.realworld.shared.TestTransactionConfiguration
-import io.realworld.user.infrastructure.TestUserRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -31,27 +27,37 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class SqlArticleReadRepositoryTest {
-
-    @Autowired
-    lateinit var testUserRepository: TestUserRepository
+internal class TagServiceTest {
 
     @Autowired
     lateinit var tagWriteRepository: TagWriteRepository
 
     @Autowired
-    lateinit var articleWriteRepository: ArticleWriteRepository
+    lateinit var tagReadRepository: TagReadRepository
 
     @Autowired
-    lateinit var sqlArticleReadRepository: SqlArticleReadRepository
+    lateinit var tagService: TagService
 
     @Test
-    fun `should find article by id`() {
-        val author = testUserRepository.insert()
-        val tag = tagWriteRepository.save(TagGen.build())
-        val article = articleWriteRepository.save(ArticleGen.build(author, listOf(tag)))
+    fun `should store or find tags`() {
+        val tagAlpha = TagGen.build()
+        val tagBravo = TagGen.build()
+        val tagCharlie = TagGen.build()
+        val tagDelta = TagGen.build()
+        val tagEcho = TagGen.build()
 
-        assertThat(sqlArticleReadRepository.findBy(article.id)).isEqualTo(article)
+        val tagNames = arrayOf(tagAlpha, tagBravo, tagCharlie, tagDelta, tagEcho).map(Tag::name)
+
+        arrayOf(tagAlpha, tagBravo, tagCharlie).forEach { tagWriteRepository.save(it) }
+
+        val tags = tagService.storeOrLoad(tagNames)
+
+        assertThat(tags)
+                .extracting<String> { it.name }
+                .containsExactlyInAnyOrderElementsOf(tagNames)
+
+        assertThat(tagReadRepository.findByNames(tagNames))
+                .extracting<String> { it.name }
+                .containsExactlyInAnyOrderElementsOf(tagNames)
     }
-
 }

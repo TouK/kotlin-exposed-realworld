@@ -1,13 +1,17 @@
 package io.realworld.article.query
 
+import io.realworld.article.domain.Article
 import io.realworld.article.domain.ArticleFavoriteReadRepository
 import io.realworld.article.domain.ArticleReadRepository
-import io.realworld.user.domain.LoggedUserService
+import io.realworld.article.endpoint.ArticleDto
+import io.realworld.article.endpoint.toDto
+import io.realworld.security.domain.LoggedUserService
+import io.realworld.user.domain.User
 import io.realworld.user.query.UserQueryService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-@Transactional
+@Transactional(readOnly = true)
 @Service
 class ArticleQueryService(
         private val articleReadRepository: ArticleReadRepository,
@@ -16,11 +20,21 @@ class ArticleQueryService(
         private val userQueryService: UserQueryService
 ) {
 
-    fun findBy(slug: String): ArticleDto {
-        val article = articleReadRepository.getBy(slug)
-        val user = userQueryService.findBy(article.authorId)
-        val favoritedBy = articleFavoriteReadRepository.findBy(article.id)
+    fun findAll(): List<ArticleDto> {
         val loggedUser = loggedUserService.loggedUser()
-        return article.toDto(user, favoritedBy.contains(loggedUser.id), favoritedBy.count())
+        return articleReadRepository.findAll().map { toDto(it, loggedUser) }
+    }
+
+    fun findBy(slug: String): ArticleDto {
+        val loggedUser = loggedUserService.loggedUser()
+        val article = articleReadRepository.getBy(slug)
+        return toDto(article, loggedUser)
+    }
+
+    private fun toDto(article: Article, loggedUser: User?): ArticleDto {
+        val favoritedBy = articleFavoriteReadRepository.findBy(article.id)
+        val author = userQueryService.findBy(article.authorId)
+        val favorited = loggedUser?.let { favoritedBy.contains(it.id) } ?: false
+        return article.toDto(author, favorited, favoritedBy.count())
     }
 }

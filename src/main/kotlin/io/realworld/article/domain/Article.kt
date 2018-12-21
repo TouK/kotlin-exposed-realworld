@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 data class Article(
         val id: ArticleId = ArticleId.New,
-        val slug: String,
+        val slug: String? = null,
         val title: String,
         val description: String,
         val body: String,

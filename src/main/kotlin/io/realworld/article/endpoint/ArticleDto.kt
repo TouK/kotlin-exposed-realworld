@@ -1,12 +1,23 @@
-package io.realworld.article.query
+package io.realworld.article.endpoint
 
 import io.realworld.article.domain.Article
 import io.realworld.article.domain.Tag
 import io.realworld.user.endpoint.UserDto
 import java.time.LocalDateTime
 
+data class ArticlesResponse(
+        val articles: List<ArticleDto>,
+        val articlesCount: Int
+) {
+    constructor(articles: List<ArticleDto>) : this(articles, articles.size)
+}
+
+data class ArticleResponse(
+        val article: ArticleDto
+)
+
 data class ArticleDto(
-        val slug: String,
+        val slug: String?,
         val title: String,
         val description: String,
         val body: String,
@@ -18,7 +29,18 @@ data class ArticleDto(
         val author: UserDto
 )
 
-fun Article.toDto(author: UserDto, favorited: Boolean, favoritesCount: Int) = ArticleDto(
+data class CreateArticleRequest(
+        val article: CreateArticleDto
+)
+
+data class CreateArticleDto(
+        val title: String,
+        val description: String,
+        val body: String,
+        val tagList: List<String>
+)
+
+fun Article.toDto(author: UserDto, favorited: Boolean = false, favoritesCount: Int = 0) = ArticleDto(
         slug = this.slug,
         title = this.title,
         description = this.description,

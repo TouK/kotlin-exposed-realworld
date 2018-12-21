@@ -2,7 +2,7 @@ package io.realworld.article.infrastructure
 
 import io.realworld.article.domain.Article
 import io.realworld.article.domain.ArticleReadRepository
-import io.realworld.article.domain.Tag
+import io.realworld.article.domain.ArticleWriteRepository
 import io.realworld.article.domain.TagId
 import io.realworld.shared.infrastructure.localDateTime
 import io.realworld.shared.infrastructure.longWrapper
@@ -12,13 +12,15 @@ import io.realworld.user.infrastructure.UserTable
 import io.realworld.user.infrastructure.userId
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.springframework.stereotype.Component
 
 object ArticleTable : Table("articles") {
     val id = articleId("id").primaryKey().autoIncrement()
-    val slug = text("slug")
+    val slug = text("slug").nullable()
     val title = text("title")
     val authorId = userId("user_id").references(UserTable.id)
     val description = text("description")
@@ -32,13 +34,14 @@ object ArticleTagTable : Table("article_tags") {
     val articleId = articleId("article_id").references(ArticleTable.id)
 }
 
-object TagTable : Table("tags") {
-    val id = tagId("id").primaryKey().autoIncrement()
-    val name = text("name")
-}
-
 @Component
 class SqlArticleReadRepository : ArticleReadRepository {
+
+    override fun findAll() =
+            (ArticleTable innerJoin ArticleTagTable innerJoin TagTable)
+                    .selectAll()
+                    .map { it.toArticle() }
+
     override fun findBy(articleId: ArticleId) =
             (ArticleTable innerJoin ArticleTagTable innerJoin TagTable)
                     .select { ArticleTable.id eq articleId }
@@ -49,10 +52,22 @@ class SqlArticleReadRepository : ArticleReadRepository {
                     .selectSingleOrNull { ArticleTable.slug eq slug }?.toArticle()
 }
 
-fun ResultRow.toTag() = Tag(
-        id = this[TagTable.id],
-        name = this[TagTable.name]
-)
+@Component
+class SqlArticleWriteRepository : ArticleWriteRepository {
+
+    override fun save(article: Article): Article {
+        val article = ArticleTable.insert { it.from(article) }[ArticleTable.id]!!
+                .let { article.copy(id = it) }
+        article.tags.forEach { tag ->
+            ArticleTagTable.insert {
+                it[ArticleTagTable.tagId] = tag.id
+                it[ArticleTagTable.articleId] = article.id
+            }
+        }
+        return article
+    }
+
+}
 
 fun Iterable<ResultRow>.toArticle() = this.fold(this.first().toArticle()) { article, resultRow ->
         article.copy(tags = article.tags + resultRow.toTag())

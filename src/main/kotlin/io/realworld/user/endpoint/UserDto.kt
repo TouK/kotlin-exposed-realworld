@@ -3,7 +3,7 @@ package io.realworld.user.endpoint
 import io.realworld.user.domain.User
 
 data class UserResponse(
-        val user: UserDto
+        val user: UserDto?
 )
 
 data class UserDto(
