@@ -13,9 +13,10 @@ variables:
   SPRING_DATASOURCE_PASSWORD: $POSTGRES_PASSWORD
 
 stages:
-  - build
   - test
-  - deploy
+  - build
+  - package
+  - acceptance_tests
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
@@ -33,10 +34,38 @@ build:
     paths:
       - build/libs/*.jar
     expire_in: 1 week
-  only:
-    - master
 
 test:
   stage: test
   script:
     - ./gradlew check
+
+push_image:
+  stage: package
+  image: docker:stable
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" . -f docker/app.Dockerfile
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+
+acceptance_tests:
+  image:
+    name: docker:latest
+  tags:
+    - aws
+  stage: acceptance_tests
+  when: manual
+  services:
+    - docker:dind
+  before_script:
+    - apk add --no-cache py-pip bash git
+    - pip install docker-compose
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - cd docker && ./run-tests.sh
+  artifacts:
+    reports:
+      junit: acceptance/newman/newman-*.xml
