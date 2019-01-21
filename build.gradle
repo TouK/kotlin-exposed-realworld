@@ -29,6 +29,7 @@ apply plugin: 'io.spring.dependency-management'
 group = 'io.realworld'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
+
 compileKotlin {
 	kotlinOptions {
 		freeCompilerArgs = ["-Xjsr305=strict"]
@@ -81,4 +82,8 @@ test {
 	testLogging {
 		events "passed", "skipped", "failed"
 	}
+}
+
+bootJar {
+	archiveName = "${project.name}.jar"
 }

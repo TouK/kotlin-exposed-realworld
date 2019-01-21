@@ -1,0 +1,41 @@
+version: '3'
+services:
+
+  db:
+    image: postgres:11
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app
+
+  app:
+    image: docker-gitlab.touk.pl/pjg/kotlin-spring-realworld
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/realworld
+    networks:
+      - app
+    depends_on:
+      - db
+
+  acceptance_tests:
+    image: docker-gitlab.touk.pl/pjg/realworld-acceptance-tests
+    build:
+      context: ./
+      dockerfile: acceptance.Dockerfile
+    environment:
+      APIURL: http://app:8080
+    networks:
+      - app
+    depends_on:
+      - app
+    working_dir: /acceptance
+    volumes:
+      - ../acceptance:/acceptance
+    command: ["/tools/wait-for-it.sh", "app:8080", "--", "./run-api-tests.sh"]
+
+networks:
+  app:
+
+volumes:
+  db-data:
