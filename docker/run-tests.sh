@@ -5,9 +5,18 @@ set -x
 # Make the container names unique
 export COMPOSE_PROJECT_NAME=$(git rev-parse --short HEAD)
 
-docker-compose build
-docker-compose up -d --no-deps db app
+# Resolve proper tag
+export TAG=${CI_COMMIT_REF_SLUG:-latest}
 
-docker-compose run --rm acceptance_tests
+echo "Using tag $TAG"
 
-docker-compose down
+envsubst < docker-compose-template.yml > .docker-compose.yml
+
+docker_compose_command="docker-compose -f .docker-compose.yml"
+
+${docker_compose_command} build
+${docker_compose_command} up -d --no-deps db app
+
+${docker_compose_command} run --rm acceptance_tests
+
+${docker_compose_command} down
