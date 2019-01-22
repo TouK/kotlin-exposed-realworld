@@ -1,5 +1,6 @@
 package io.realworld.user.infrastructure
 
+import io.realworld.shared.infrastructure.getOrThrow
 import io.realworld.shared.infrastructure.longWrapper
 import io.realworld.shared.infrastructure.selectSingleOrNull
 import io.realworld.shared.refs.UserId
@@ -39,8 +40,9 @@ class SqlUserReadRepository : UserReadRepository {
 @Component
 class SqlUserWriteRepository : UserWriteRepository {
     override fun create(user: User) =
-            UserTable.insert { it.from(user) }[UserTable.id]!!
-                .let { user.copy(id = it) }
+            UserTable.insert { it.from(user) }
+                    .getOrThrow(UserTable.id)
+                    .let { user.copy(id = it) }
 
     override fun save(user: User) = user.apply {
         UserTable.update({ UserTable.id eq user.id }) {

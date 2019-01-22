@@ -50,8 +50,8 @@ internal class SqlCommentReadRepositoryTest {
     fun `should load comments for article`() {
         val author = testUserRepository.insert()
         val commenter = testUserRepository.insert()
-        val article = articleWriteRepository.save(ArticleGen.build(author))
-        val comment = testCommentRepository.insert(CommentGen.build(article = article, author = commenter))
+        val article = articleWriteRepository.create(ArticleGen.build(author))
+        val comment = testCommentRepository.create(CommentGen.build(article = article, author = commenter))
 
         assertThat(sqlCommentRepository.findAllByArticleId(article.id)).containsExactly(comment)
     }

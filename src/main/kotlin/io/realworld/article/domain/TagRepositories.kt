@@ -5,5 +5,5 @@ interface TagReadRepository {
 }
 
 interface TagWriteRepository {
-    fun save(tag: Tag): Tag
+    fun create(tag: Tag): Tag
 }

@@ -48,8 +48,8 @@ internal class SqlArticleReadRepositoryTest {
     @Test
     fun `should find article by id`() {
         val author = testUserRepository.insert()
-        val tag = tagWriteRepository.save(TagGen.build())
-        val article = articleWriteRepository.save(ArticleGen.build(author, listOf(tag)))
+        val tag = tagWriteRepository.create(TagGen.build())
+        val article = articleWriteRepository.create(ArticleGen.build(author, listOf(tag)))
 
         assertThat(sqlArticleReadRepository.findBy(article.id)).isEqualTo(article)
     }

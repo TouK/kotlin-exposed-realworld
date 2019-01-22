@@ -52,7 +52,7 @@ internal class ArticleServiceTest {
         val tagBravo = TagGen.build()
         val tagNames = arrayOf(tagAlpha, tagBravo).map(Tag::name)
 
-        tagWriteRepository.save(tagAlpha)
+        tagWriteRepository.create(tagAlpha)
 
         val createArticleDto = CreateArticleDtoGen.build(tags = tagNames)
 
