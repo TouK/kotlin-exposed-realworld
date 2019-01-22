@@ -11,6 +11,7 @@ import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
+import org.jetbrains.exposed.sql.update
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -37,9 +38,15 @@ class SqlUserReadRepository : UserReadRepository {
 
 @Component
 class SqlUserWriteRepository : UserWriteRepository {
-    override fun save(user: User) =
+    override fun create(user: User) =
             UserTable.insert { it.from(user) }[UserTable.id]!!
                 .let { user.copy(id = it) }
+
+    override fun save(user: User) = user.apply {
+        UserTable.update({ UserTable.id eq user.id }) {
+            it.from(user)
+        }
+    }
 }
 
 fun ResultRow.toUser(userIdColumn: Column<UserId> = UserTable.id) = User(

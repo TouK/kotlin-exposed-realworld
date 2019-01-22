@@ -17,6 +17,6 @@ class UserRegisterService(
                 password = passwordEncoder.encode(password),
                 email = email
         )
-        return userWriteRepository.save(user)
+        return userWriteRepository.create(user)
     }
 }

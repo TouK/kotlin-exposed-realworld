@@ -34,6 +34,14 @@ data class RegisterUserDto(
         val password: String
 )
 
+data class UpdateDto(
+        val user: UpdateUserDto
+)
+
+data class UpdateUserDto(
+        val email: String
+)
+
 fun User.toDto(token: String? = null) = UserDto(
         email = this.email,
         username = this.username,

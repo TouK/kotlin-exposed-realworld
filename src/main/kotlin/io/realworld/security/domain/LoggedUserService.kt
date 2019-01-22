@@ -15,6 +15,8 @@ class LoggedUserService {
                 authentication.principal as User
         } else null
     }
+
+    fun loggedUserOrThrow() = loggedUser() ?: throw UserNotAuthorizedException()
 }
 
 class UserNotAuthorizedException : ApplicationException("User not authorized")
