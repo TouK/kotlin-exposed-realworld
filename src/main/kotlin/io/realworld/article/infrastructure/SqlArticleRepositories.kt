@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component
 
 object ArticleTable : Table("articles") {
     val id = articleId("id").primaryKey().autoIncrement()
-    val slug = text("slug").nullable()
+    val slug = text("slug")
     val title = text("title")
     val authorId = userId("user_id").references(UserTable.id)
     val description = text("description")
@@ -76,8 +76,8 @@ fun Iterable<ResultRow>.toArticle() = this.fold(this.first().toArticle()) { arti
 
 fun ResultRow.toArticle() = Article(
         id = this[ArticleTable.id],
-        slug = this[ArticleTable.slug],
         title = this[ArticleTable.title],
+        slug = this[ArticleTable.slug],
         description = this[ArticleTable.description],
         body = this[ArticleTable.body],
         authorId = this[ArticleTable.authorId],
