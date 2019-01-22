@@ -10,7 +10,7 @@ services:
       - app
 
   app:
-    image: docker-gitlab.touk.pl/pjg/kotlin-spring-realworld
+    image: docker-gitlab.touk.pl/pjg/kotlin-spring-realworld:$TAG
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/realworld
     networks:
@@ -19,7 +19,7 @@ services:
       - db
 
   acceptance_tests:
-    image: docker-gitlab.touk.pl/pjg/realworld-acceptance-tests
+    image: docker-gitlab.touk.pl/pjg/realworld-acceptance-tests:$TAG
     build:
       context: ./
       dockerfile: acceptance.Dockerfile
