@@ -24,6 +24,6 @@ class ArticleService(
             Article(title = this.title, description = this.description, authorId = loggedUser.id, tags = tags,
                     body = this.body)
         }
-        return articleWriteRepository.save(article).toDto(loggedUser.toDto())
+        return articleWriteRepository.create(article).toDto(loggedUser.toDto())
     }
 }

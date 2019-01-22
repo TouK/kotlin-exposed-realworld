@@ -49,7 +49,7 @@ internal class SqlArticleFavoriteRepositoryTest {
     @Test
     fun `should favorite and unfavorite article`() {
         val author = testUserRepository.insert(UserGen.build())
-        val article = articleWriteRepository.save(ArticleGen.build(author))
+        val article = articleWriteRepository.create(ArticleGen.build(author))
         val user = testUserRepository.insert(UserGen.build())
 
         articleFavoriteWriteRepository.addFor(article.id, user.id)

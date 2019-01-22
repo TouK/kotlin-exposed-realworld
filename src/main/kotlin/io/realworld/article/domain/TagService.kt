@@ -13,7 +13,7 @@ class TagService(
     fun storeOrLoad(tagNames: List<String>): List<Tag> {
         val stored = tagReadRepository.findByNames(tagNames)
         val remainingTags = tagNames.toSet() - stored.map { it.name }
-        val storedRemaining = remainingTags.map { tagWriteRepository.save(Tag(name = it)) }
+        val storedRemaining = remainingTags.map { tagWriteRepository.create(Tag(name = it)) }
         return stored + storedRemaining
     }
 }

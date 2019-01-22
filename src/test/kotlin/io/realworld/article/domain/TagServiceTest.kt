@@ -48,7 +48,7 @@ internal class TagServiceTest {
 
         val tagNames = arrayOf(tagAlpha, tagBravo, tagCharlie, tagDelta, tagEcho).map(Tag::name)
 
-        arrayOf(tagAlpha, tagBravo, tagCharlie).forEach { tagWriteRepository.save(it) }
+        arrayOf(tagAlpha, tagBravo, tagCharlie).forEach { tagWriteRepository.create(it) }
 
         val tags = tagService.storeOrLoad(tagNames)
 

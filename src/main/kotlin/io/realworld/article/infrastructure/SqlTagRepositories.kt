@@ -3,6 +3,7 @@ package io.realworld.article.infrastructure
 import io.realworld.article.domain.Tag
 import io.realworld.article.domain.TagReadRepository
 import io.realworld.article.domain.TagWriteRepository
+import io.realworld.shared.infrastructure.getOrThrow
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.insert
@@ -25,10 +26,10 @@ class SqlTagReadRepository : TagReadRepository {
 @Component
 class SqlTagWriteRepository : TagWriteRepository {
 
-    override fun save(tag: Tag): Tag {
-        return TagTable.insert { it[TagTable.name] = tag.name }[TagTable.id]!!
+    override fun create(tag: Tag) =
+        TagTable.insert { it[TagTable.name] = tag.name }
+                .getOrThrow(TagTable.id)
                 .let { tag.copy(id = it) }
-    }
 }
 
 fun ResultRow.toTag() = Tag(

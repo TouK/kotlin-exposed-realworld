@@ -4,6 +4,7 @@ import io.realworld.article.domain.Article
 import io.realworld.article.domain.ArticleReadRepository
 import io.realworld.article.domain.ArticleWriteRepository
 import io.realworld.article.domain.TagId
+import io.realworld.shared.infrastructure.getOrThrow
 import io.realworld.shared.infrastructure.longWrapper
 import io.realworld.shared.infrastructure.selectSingleOrNull
 import io.realworld.shared.infrastructure.zonedDateTime
@@ -55,8 +56,9 @@ class SqlArticleReadRepository : ArticleReadRepository {
 @Component
 class SqlArticleWriteRepository : ArticleWriteRepository {
 
-    override fun save(article: Article): Article {
-        val savedArticle = ArticleTable.insert { it.from(article) }[ArticleTable.id]!!
+    override fun create(article: Article): Article {
+        val savedArticle = ArticleTable.insert { it.from(article) }
+                .getOrThrow(ArticleTable.id)
                 .let { article.copy(id = it) }
         savedArticle.tags.forEach { tag ->
             ArticleTagTable.insert {
