@@ -1,6 +1,7 @@
 package io.realworld.user.infrastructure
 
-import io.realworld.shared.TestDataConfiguration
+import io.realworld.precondition.Precondition
+import io.realworld.shared.PreconditionConfiguration
 import io.realworld.shared.TestTransactionConfiguration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -17,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 @SpringBootTest(
         classes = [
             SqlUserReadRepository::class,
-            TestDataConfiguration::class,
+            PreconditionConfiguration::class,
             TestTransactionConfiguration::class
         ]
 )
@@ -30,14 +31,14 @@ import org.springframework.transaction.annotation.Transactional
 internal class SqlUserReadRepositoryTest {
 
     @Autowired
-    lateinit var sqlUserRepository: SqlUserReadRepository
+    lateinit var given: Precondition
 
     @Autowired
-    lateinit var testUserRepository: TestUserRepository
+    lateinit var sqlUserRepository: SqlUserReadRepository
 
     @Test
     fun `should find user by id`() {
-        val user = testUserRepository.insert()
+        val user = given.user.exists()
 
         assertThat(sqlUserRepository.findBy(user.id)).isEqualTo(user)
     }

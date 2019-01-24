@@ -1,12 +1,11 @@
 package io.realworld.article.infrastructure
 
 import io.realworld.article.domain.ArticleGen
-import io.realworld.article.domain.ArticleWriteRepository
 import io.realworld.article.domain.TagGen
 import io.realworld.article.domain.TagWriteRepository
-import io.realworld.shared.TestDataConfiguration
+import io.realworld.precondition.Precondition
+import io.realworld.shared.PreconditionConfiguration
 import io.realworld.shared.TestTransactionConfiguration
-import io.realworld.user.infrastructure.TestUserRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -22,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional
 @SpringBootTest(
         classes = [
             ArticleConfiguration::class,
-            TestDataConfiguration::class,
+            PreconditionConfiguration::class,
             TestTransactionConfiguration::class
         ]
 )
@@ -34,24 +33,20 @@ import org.springframework.transaction.annotation.Transactional
 internal class SqlArticleReadRepositoryTest {
 
     @Autowired
-    lateinit var testUserRepository: TestUserRepository
+    lateinit var given: Precondition
 
     @Autowired
     lateinit var tagWriteRepository: TagWriteRepository
-
-    @Autowired
-    lateinit var articleWriteRepository: ArticleWriteRepository
 
     @Autowired
     lateinit var sqlArticleReadRepository: SqlArticleReadRepository
 
     @Test
     fun `should find article by id`() {
-        val author = testUserRepository.insert()
+        val author = given.user.exists()
         val tag = tagWriteRepository.create(TagGen.build())
-        val article = articleWriteRepository.create(ArticleGen.build(author, listOf(tag)))
+        val article = given.article.exist(ArticleGen.build(author, listOf(tag)))
 
         assertThat(sqlArticleReadRepository.findBy(article.id)).isEqualTo(article)
     }
-
 }

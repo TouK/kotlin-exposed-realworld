@@ -4,6 +4,8 @@ import io.realworld.article.infrastructure.ArticleTable
 import io.realworld.article.infrastructure.articleId
 import io.realworld.comment.domain.Comment
 import io.realworld.comment.domain.CommentReadRepository
+import io.realworld.comment.domain.CommentWriteRepository
+import io.realworld.shared.infrastructure.getOrThrow
 import io.realworld.shared.infrastructure.longWrapper
 import io.realworld.shared.infrastructure.zonedDateTime
 import io.realworld.shared.refs.ArticleId
@@ -13,6 +15,7 @@ import io.realworld.user.infrastructure.toUser
 import io.realworld.user.infrastructure.userId
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.springframework.stereotype.Component
@@ -31,6 +34,14 @@ class SqlCommentReadRepository : CommentReadRepository {
             (CommentTable innerJoin UserTable)
                     .select { CommentTable.articleId eq articleId }
                     .map { it.toComment() }
+    }
+
+@Component
+class SqlCommentWriteRepository : CommentWriteRepository {
+    override fun create(comment: Comment) =
+            CommentTable.insert { it.from(comment) }
+                    .getOrThrow(CommentTable.id)
+                    .let { comment.copy(id = it) }
     }
 
 fun ResultRow.toComment() = Comment(

@@ -14,6 +14,8 @@ data class Article(
         val tags: List<Tag>,
         val createdAt: ZonedDateTime = ZonedDateTime.now(),
         val updatedAt: ZonedDateTime = ZonedDateTime.now()
-)
+) {
+    fun withTitle(title: String) = copy(title = title, slug = title.toSlug())
+}
 
 private fun String.toSlug() = this.toLowerCase().replace(Regex("\\W+"), "-")

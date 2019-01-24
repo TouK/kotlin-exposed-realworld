@@ -1,13 +1,12 @@
 package io.realworld.article.infrastructure
 
-import io.realworld.article.domain.ArticleFavoriteReadRepository
+import io.realworld.article.domain.ArticleFavoriteReadRepositories
 import io.realworld.article.domain.ArticleFavoriteWriteRepository
 import io.realworld.article.domain.ArticleGen
 import io.realworld.article.domain.ArticleWriteRepository
-import io.realworld.shared.TestDataConfiguration
+import io.realworld.precondition.Precondition
+import io.realworld.shared.PreconditionConfiguration
 import io.realworld.shared.TestTransactionConfiguration
-import io.realworld.user.domain.UserGen
-import io.realworld.user.infrastructure.TestUserRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -23,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional
 @SpringBootTest(
         classes = [
             ArticleConfiguration::class,
-            TestDataConfiguration::class,
+            PreconditionConfiguration::class,
             TestTransactionConfiguration::class
         ]
 )
@@ -35,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional
 internal class SqlArticleFavoriteRepositoryTest {
 
     @Autowired
-    lateinit var testUserRepository: TestUserRepository
+    lateinit var given: Precondition
 
     @Autowired
     lateinit var articleWriteRepository: ArticleWriteRepository
@@ -44,13 +43,13 @@ internal class SqlArticleFavoriteRepositoryTest {
     lateinit var articleFavoriteWriteRepository: ArticleFavoriteWriteRepository
 
     @Autowired
-    lateinit var articleFavoriteReadRepository: ArticleFavoriteReadRepository
+    lateinit var articleFavoriteReadRepository: ArticleFavoriteReadRepositories
 
     @Test
     fun `should favorite and unfavorite article`() {
-        val author = testUserRepository.insert(UserGen.build())
+        val author = given.user.exists()
         val article = articleWriteRepository.create(ArticleGen.build(author))
-        val user = testUserRepository.insert(UserGen.build())
+        val user = given.user.exists()
 
         articleFavoriteWriteRepository.addFor(article.id, user.id)
 

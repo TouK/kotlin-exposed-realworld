@@ -9,3 +9,8 @@ interface UserReadRepository {
 
     fun getBy(userId: UserId) = findBy(userId) ?: throw UserNotFoundException(userId)
 }
+
+interface UserWriteRepository {
+    fun create(user: User): User
+    fun save(user: User)
+}

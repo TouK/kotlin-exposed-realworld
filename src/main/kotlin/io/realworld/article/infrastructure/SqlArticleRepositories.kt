@@ -7,6 +7,7 @@ import io.realworld.article.domain.TagId
 import io.realworld.shared.infrastructure.getOrThrow
 import io.realworld.shared.infrastructure.longWrapper
 import io.realworld.shared.infrastructure.selectSingleOrNull
+import io.realworld.shared.infrastructure.updateExactlyOne
 import io.realworld.shared.infrastructure.zonedDateTime
 import io.realworld.shared.refs.ArticleId
 import io.realworld.user.infrastructure.UserTable
@@ -67,6 +68,10 @@ class SqlArticleWriteRepository : ArticleWriteRepository {
             }
         }
         return savedArticle
+    }
+
+    override fun save(article: Article) {
+        ArticleTable.updateExactlyOne({ ArticleTable.id eq article.id }) { it.from(article) }
     }
 }
 

@@ -40,6 +40,16 @@ data class CreateArticleDto(
         val tagList: List<String>
 )
 
+data class UpdateArticleRequest(
+        val article: UpdateArticleDto
+)
+
+data class UpdateArticleDto(
+        val title: String?,
+        val description: String?,
+        val body: String?
+)
+
 fun Article.toDto(author: UserDto, favorited: Boolean = false, favoritesCount: Int = 0) = ArticleDto(
         slug = this.slug,
         title = this.title,

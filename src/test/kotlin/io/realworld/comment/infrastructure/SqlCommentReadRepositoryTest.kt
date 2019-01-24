@@ -1,12 +1,11 @@
 package io.realworld.comment.infrastructure
 
 import io.realworld.article.domain.ArticleGen
-import io.realworld.article.domain.ArticleWriteRepository
 import io.realworld.article.infrastructure.ArticleConfiguration
 import io.realworld.comment.domain.CommentGen
-import io.realworld.shared.TestDataConfiguration
+import io.realworld.precondition.Precondition
+import io.realworld.shared.PreconditionConfiguration
 import io.realworld.shared.TestTransactionConfiguration
-import io.realworld.user.infrastructure.TestUserRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -23,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional
         classes = [
             SqlCommentReadRepository::class,
             ArticleConfiguration::class,
-            TestDataConfiguration::class,
+            PreconditionConfiguration::class,
             TestTransactionConfiguration::class
         ]
 )
@@ -35,23 +34,17 @@ import org.springframework.transaction.annotation.Transactional
 internal class SqlCommentReadRepositoryTest {
 
     @Autowired
-    lateinit var testUserRepository: TestUserRepository
-
-    @Autowired
-    lateinit var articleWriteRepository: ArticleWriteRepository
-
-    @Autowired
-    lateinit var testCommentRepository: TestCommentRepository
+    lateinit var given: Precondition
 
     @Autowired
     lateinit var sqlCommentRepository: SqlCommentReadRepository
 
     @Test
     fun `should load comments for article`() {
-        val author = testUserRepository.insert()
-        val commenter = testUserRepository.insert()
-        val article = articleWriteRepository.create(ArticleGen.build(author))
-        val comment = testCommentRepository.create(CommentGen.build(article = article, author = commenter))
+        val author = given.user.exists()
+        val commenter = given.user.exists()
+        val article = given.article.exist(ArticleGen.build(author))
+        val comment = given.comment.exist(CommentGen.build(article = article, author = commenter))
 
         assertThat(sqlCommentRepository.findAllByArticleId(article.id)).containsExactly(comment)
     }
