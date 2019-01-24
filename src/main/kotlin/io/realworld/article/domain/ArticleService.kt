@@ -38,4 +38,9 @@ class ArticleService(
                 .apply(articleWriteRepository::save)
                 .toDto(loggedUserService.loggedUserOrThrow().toDto())
     }
+
+    fun delete(slug: Slug) {
+        val article = articleReadRepository.getBy(slug)
+        articleWriteRepository.delete(article)
+    }
 }

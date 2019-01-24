@@ -1,4 +1,4 @@
-package io.realworld.precondition
+package io.realworld.test.precondition
 
 import org.springframework.stereotype.Component
 

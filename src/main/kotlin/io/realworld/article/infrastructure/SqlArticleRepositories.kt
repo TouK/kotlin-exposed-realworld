@@ -16,6 +16,7 @@ import io.realworld.user.infrastructure.UserTable
 import io.realworld.user.infrastructure.userId
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
@@ -74,6 +75,11 @@ class SqlArticleWriteRepository : ArticleWriteRepository {
 
     override fun save(article: Article) {
         ArticleTable.updateExactlyOne({ ArticleTable.id eq article.id }) { it.from(article) }
+    }
+
+    override fun delete(article: Article) {
+        ArticleTagTable.deleteWhere { ArticleTagTable.articleId eq article.id }
+        ArticleTable.deleteWhere { ArticleTable.id eq article.id }
     }
 }
 

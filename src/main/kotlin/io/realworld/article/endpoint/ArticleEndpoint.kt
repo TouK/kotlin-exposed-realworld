@@ -3,6 +3,7 @@ package io.realworld.article.endpoint
 import io.realworld.article.domain.ArticleService
 import io.realworld.article.domain.Slug
 import io.realworld.article.query.ArticleQueryService
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -43,4 +44,8 @@ class ArticleEndpoint(
     fun update(@PathVariable(name = SLUG_PARAM, required = true) slug: Slug, @Valid @RequestBody request: UpdateArticleRequest) =
             ArticleResponse(articleService.update(slug, request.article))
 
+    @DeleteMapping("/{$SLUG_PARAM}")
+    fun delete(@PathVariable(name = SLUG_PARAM, required = true) slug: Slug) {
+        articleService.delete(slug)
+    }
 }

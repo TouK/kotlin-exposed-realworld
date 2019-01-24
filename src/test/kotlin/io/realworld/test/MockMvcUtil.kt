@@ -1,4 +1,4 @@
-package io.realworld
+package io.realworld.test
 
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
