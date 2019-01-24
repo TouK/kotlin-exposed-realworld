@@ -14,6 +14,6 @@ class UserUpdateService(
     fun update(user: User, updateDto: UpdateDto): User {
         return userReadRepository.getBy(user.id)
                 .copy(email = updateDto.user.email)
-                .let(userWriteRepository::save)
+                .also(userWriteRepository::save)
     }
 }

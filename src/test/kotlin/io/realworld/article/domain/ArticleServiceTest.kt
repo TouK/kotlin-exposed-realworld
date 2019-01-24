@@ -1,66 +1,81 @@
 package io.realworld.article.domain
 
-import io.realworld.article.endpoint.CreateArticleDtoGen
-import io.realworld.article.infrastructure.ArticleConfiguration
-import io.realworld.shared.TestDataConfiguration
-import io.realworld.shared.TestTransactionConfiguration
-import io.realworld.user.infrastructure.TestUserRepository
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
+import io.realworld.article.endpoint.UpdateArticleDto
+import io.realworld.security.domain.LoggedUserService
+import io.realworld.shared.Gen
+import io.realworld.user.domain.UserGen
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration
-import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.test.context.junit.jupiter.SpringExtension
-import org.springframework.transaction.annotation.Transactional
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest(
-        classes = [
-            ArticleConfiguration::class,
-            TestUserRepository::class,
-            TestDataConfiguration::class,
-            TestTransactionConfiguration::class
-        ]
-)
-@ImportAutoConfiguration(
-        DataSourceAutoConfiguration::class,
-        FlywayAutoConfiguration::class
-)
-@Transactional
 internal class ArticleServiceTest {
 
-    @Autowired
-    lateinit var testUserRepository: TestUserRepository
+    val articleReadRepository = mock<ArticleReadRepository>()
+    val articleWriteRepository = mock<ArticleWriteRepository>()
+    val loggedUserService = mock<LoggedUserService>()
+    val tagService = mock<TagService>()
 
-    @Autowired
-    lateinit var tagWriteRepository: TagWriteRepository
+    val user = UserGen.build()
+    val article = ArticleGen.build(user = user)
 
-    @Autowired
-    lateinit var articleService: ArticleService
+    val articleService = ArticleService(articleReadRepository, articleWriteRepository, loggedUserService, tagService)
+
+    @BeforeEach
+    fun setup() {
+        whenever(articleReadRepository.getBy(article.slug)).thenReturn(article)
+        whenever(loggedUserService.loggedUserOrThrow()).thenReturn(user)
+    }
 
     @Test
-    fun `should save article`() {
-        val user = testUserRepository.insert()
-        SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(user, null, emptyList())
+    fun `should update article`() {
+        val newBody = Gen.alphanumeric(200)
+        val newTitle = Gen.alphanumeric(10)
+        val newDescription = Gen.alphanumeric(20)
 
-        val tagAlpha = TagGen.build()
-        val tagBravo = TagGen.build()
-        val tagNames = arrayOf(tagAlpha, tagBravo).map(Tag::name)
+        val updatedArticle = articleService
+                .update(article.slug, UpdateArticleDto(title = newTitle, description = newDescription, body = newBody))
 
-        tagWriteRepository.create(tagAlpha)
-
-        val createArticleDto = CreateArticleDtoGen.build(tags = tagNames)
-
-        val articleDto = articleService.create(createArticleDto)
-
-        assertThat(articleDto.title).isEqualTo(createArticleDto.title)
-        assertThat(articleDto.description).isEqualTo(createArticleDto.description)
-        assertThat(articleDto.body).isEqualTo(createArticleDto.body)
-        assertThat(articleDto.tagList).isEqualTo(tagNames)
+        assertThat(updatedArticle.title).isEqualTo(newTitle)
+        assertThat(updatedArticle.description).isEqualTo(newDescription)
+        assertThat(updatedArticle.body).isEqualTo(newBody)
     }
+
+    @Test
+    fun `should update article's title`() {
+        val newTitle = Gen.alphanumeric(10)
+
+        val updatedArticle = articleService
+                .update(article.slug, UpdateArticleDto(title = newTitle, description = null, body = null))
+
+        assertThat(updatedArticle.title).isEqualTo(newTitle)
+        assertThat(updatedArticle.description).isEqualTo(article.description)
+        assertThat(updatedArticle.body).isEqualTo(article.body)
+    }
+
+    @Test
+    fun `should update article's description`() {
+        val newDescription = Gen.alphanumeric(10)
+
+        val updatedArticle = articleService
+                .update(article.slug, UpdateArticleDto(title = null, description = newDescription, body = null))
+
+        assertThat(updatedArticle.description).isEqualTo(newDescription)
+        assertThat(updatedArticle.title).isEqualTo(article.title)
+        assertThat(updatedArticle.body).isEqualTo(article.body)
+    }
+
+    @Test
+    fun `should update article's body`() {
+        val newBody = Gen.alphanumeric(200)
+
+        val updatedArticle = articleService
+                .update(article.slug, UpdateArticleDto(title = null, description = null, body = newBody))
+
+        assertThat(updatedArticle.body).isEqualTo(newBody)
+        assertThat(updatedArticle.title).isEqualTo(article.title)
+        assertThat(updatedArticle.description).isEqualTo(article.description)
+    }
+
 }

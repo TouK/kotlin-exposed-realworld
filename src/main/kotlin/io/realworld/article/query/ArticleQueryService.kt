@@ -1,7 +1,7 @@
 package io.realworld.article.query
 
 import io.realworld.article.domain.Article
-import io.realworld.article.domain.ArticleFavoriteReadRepository
+import io.realworld.article.domain.ArticleFavoriteReadRepositories
 import io.realworld.article.domain.ArticleReadRepository
 import io.realworld.article.endpoint.ArticleDto
 import io.realworld.article.endpoint.toDto
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class ArticleQueryService(
         private val articleReadRepository: ArticleReadRepository,
-        private val articleFavoriteReadRepository: ArticleFavoriteReadRepository,
+        private val articleFavoriteReadRepository: ArticleFavoriteReadRepositories,
         private val loggedUserService: LoggedUserService,
         private val userQueryService: UserQueryService
 ) {

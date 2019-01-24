@@ -5,6 +5,7 @@ import io.realworld.article.query.ArticleQueryService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -36,5 +37,9 @@ class ArticleEndpoint(
     @PostMapping
     fun create(@Valid @RequestBody request: CreateArticleRequest) =
             ArticleResponse(articleService.create(request.article))
+
+    @PutMapping("/{$SLUG_PARAM}")
+    fun update(@PathVariable(name = SLUG_PARAM, required = true) slug: String, @Valid @RequestBody request: UpdateArticleRequest) =
+            ArticleResponse(articleService.update(slug, request.article))
 
 }

@@ -1,6 +1,6 @@
 package io.realworld.article.infrastructure
 
-import io.realworld.article.domain.ArticleFavoriteReadRepository
+import io.realworld.article.domain.ArticleFavoriteReadRepositories
 import io.realworld.article.domain.ArticleFavoriteWriteRepository
 import io.realworld.shared.refs.ArticleId
 import io.realworld.shared.refs.UserId
@@ -19,7 +19,7 @@ object ArticleFavoriteTable : Table("article_favorites") {
 }
 
 @Repository
-class SqlArticleFavoriteReadRepository : ArticleFavoriteReadRepository {
+class SqlArticleFavoriteReadRepository : ArticleFavoriteReadRepositories {
     override fun findBy(articleId: ArticleId): List<UserId> {
         return ArticleFavoriteTable
                 .select { ArticleFavoriteTable.articleId eq articleId }

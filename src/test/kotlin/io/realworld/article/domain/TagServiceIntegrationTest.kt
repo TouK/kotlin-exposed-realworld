@@ -1,7 +1,8 @@
 package io.realworld.article.domain
 
 import io.realworld.article.infrastructure.ArticleConfiguration
-import io.realworld.shared.TestDataConfiguration
+import io.realworld.precondition.Precondition
+import io.realworld.shared.PreconditionConfiguration
 import io.realworld.shared.TestTransactionConfiguration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 @SpringBootTest(
         classes = [
             ArticleConfiguration::class,
-            TestDataConfiguration::class,
+            PreconditionConfiguration::class,
             TestTransactionConfiguration::class
         ]
 )
@@ -27,10 +28,10 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class TagServiceTest {
+internal class TagServiceIntegrationTest {
 
     @Autowired
-    lateinit var tagWriteRepository: TagWriteRepository
+    lateinit var given: Precondition
 
     @Autowired
     lateinit var tagReadRepository: TagReadRepository
@@ -48,7 +49,7 @@ internal class TagServiceTest {
 
         val tagNames = arrayOf(tagAlpha, tagBravo, tagCharlie, tagDelta, tagEcho).map(Tag::name)
 
-        arrayOf(tagAlpha, tagBravo, tagCharlie).forEach { tagWriteRepository.create(it) }
+        arrayOf(tagAlpha, tagBravo, tagCharlie).forEach { given.tag.exists(it) }
 
         val tags = tagService.storeOrLoad(tagNames)
 

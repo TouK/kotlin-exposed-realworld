@@ -3,7 +3,6 @@ package io.realworld.article.domain
 import io.realworld.shared.refs.ArticleId
 
 interface ArticleReadRepository {
-
     fun findAll(): List<Article>
     fun findBy(articleId: ArticleId): Article?
     fun findBy(slug: String): Article?
@@ -13,4 +12,5 @@ interface ArticleReadRepository {
 
 interface ArticleWriteRepository {
     fun create(article: Article): Article
+    fun save(article: Article)
 }
