@@ -6,8 +6,8 @@ import java.time.ZonedDateTime
 
 data class Article(
         val id: ArticleId = ArticleId.New,
-        val slug: String? = null,
         val title: String,
+        val slug: String = title.toSlug(),
         val description: String,
         val body: String,
         val authorId: UserId,
@@ -15,3 +15,5 @@ data class Article(
         val createdAt: ZonedDateTime = ZonedDateTime.now(),
         val updatedAt: ZonedDateTime = ZonedDateTime.now()
 )
+
+private fun String.toSlug() = this.toLowerCase().replace(Regex("\\W+"), "-")

@@ -20,12 +20,16 @@ class ArticleEndpoint(
     companion object {
         const val PATH = "/articles"
         const val SLUG_PARAM = "slug"
+        const val FEED_PATH = "/feed"
     }
 
     @GetMapping
     fun list() = ArticlesResponse(articleQueryService.findAll())
 
-    @GetMapping("/$SLUG_PARAM")
+    @GetMapping(FEED_PATH)
+    fun feed() = ArticlesResponse(articleQueryService.findAllOrderByMostRecent())
+
+    @GetMapping("/{$SLUG_PARAM}")
     fun get(@PathVariable(name = SLUG_PARAM, required = true) slug: String) =
             ArticleResponse(articleQueryService.findBy(slug))
 

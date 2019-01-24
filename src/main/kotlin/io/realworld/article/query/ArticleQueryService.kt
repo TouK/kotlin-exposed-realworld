@@ -31,6 +31,8 @@ class ArticleQueryService(
         return toDto(article, loggedUser)
     }
 
+    fun findAllOrderByMostRecent() = findAll().sortedByDescending(ArticleDto::updatedAt)
+
     private fun toDto(article: Article, loggedUser: User?): ArticleDto {
         val favoritedBy = articleFavoriteReadRepository.findBy(article.id)
         val author = userQueryService.findBy(article.authorId)
