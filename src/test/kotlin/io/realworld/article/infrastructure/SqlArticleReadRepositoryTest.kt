@@ -3,9 +3,9 @@ package io.realworld.article.infrastructure
 import io.realworld.article.domain.ArticleGen
 import io.realworld.article.domain.TagGen
 import io.realworld.article.domain.TagWriteRepository
-import io.realworld.precondition.Precondition
-import io.realworld.shared.PreconditionConfiguration
 import io.realworld.shared.TestTransactionConfiguration
+import io.realworld.test.precondition.Precondition
+import io.realworld.test.precondition.PreconditionConfiguration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -36,15 +36,12 @@ internal class SqlArticleReadRepositoryTest {
     lateinit var given: Precondition
 
     @Autowired
-    lateinit var tagWriteRepository: TagWriteRepository
-
-    @Autowired
     lateinit var sqlArticleReadRepository: SqlArticleReadRepository
 
     @Test
     fun `should find article by id`() {
         val author = given.user.exists()
-        val tag = tagWriteRepository.create(TagGen.build())
+        val tag = given.tag.exists()
         val article = given.article.exist(ArticleGen.build(author, listOf(tag)))
 
         assertThat(sqlArticleReadRepository.findBy(article.id)).isEqualTo(article)

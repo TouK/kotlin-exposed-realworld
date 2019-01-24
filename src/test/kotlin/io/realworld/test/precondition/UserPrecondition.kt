@@ -1,4 +1,4 @@
-package io.realworld.precondition
+package io.realworld.test.precondition
 
 import io.realworld.user.domain.User
 import io.realworld.user.domain.UserGen

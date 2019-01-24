@@ -13,4 +13,5 @@ interface ArticleReadRepository {
 interface ArticleWriteRepository {
     fun create(article: Article): Article
     fun save(article: Article)
+    fun delete(article: Article)
 }

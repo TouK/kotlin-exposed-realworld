@@ -1,7 +1,7 @@
 package io.realworld.user.infrastructure
 
-import io.realworld.precondition.Precondition
-import io.realworld.shared.PreconditionConfiguration
+import io.realworld.test.precondition.Precondition
+import io.realworld.test.precondition.PreconditionConfiguration
 import io.realworld.shared.TestTransactionConfiguration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

@@ -1,4 +1,4 @@
-package io.realworld.precondition
+package io.realworld.test.precondition
 
 import io.realworld.comment.domain.Comment
 import io.realworld.comment.domain.CommentWriteRepository

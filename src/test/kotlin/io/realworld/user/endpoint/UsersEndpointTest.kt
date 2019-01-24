@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.whenever
-import io.realworld.json
+import io.realworld.test.json
 import io.realworld.security.infrastructure.SecurityConfiguration
 import io.realworld.shared.Gen
 import io.realworld.shared.refs.UserId

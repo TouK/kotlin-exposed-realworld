@@ -17,7 +17,7 @@ data class ArticleResponse(
 )
 
 data class ArticleDto(
-        val slug: String?,
+        val slug: String,
         val title: String,
         val description: String,
         val body: String,

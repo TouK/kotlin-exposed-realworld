@@ -1,4 +1,4 @@
-package io.realworld.precondition
+package io.realworld.test.precondition
 
 import io.realworld.article.domain.Article
 import io.realworld.article.domain.ArticleWriteRepository

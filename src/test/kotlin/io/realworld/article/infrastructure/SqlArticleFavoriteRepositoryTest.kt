@@ -4,8 +4,8 @@ import io.realworld.article.domain.ArticleFavoriteReadRepositories
 import io.realworld.article.domain.ArticleFavoriteWriteRepository
 import io.realworld.article.domain.ArticleGen
 import io.realworld.article.domain.ArticleWriteRepository
-import io.realworld.precondition.Precondition
-import io.realworld.shared.PreconditionConfiguration
+import io.realworld.test.precondition.Precondition
+import io.realworld.test.precondition.PreconditionConfiguration
 import io.realworld.shared.TestTransactionConfiguration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
