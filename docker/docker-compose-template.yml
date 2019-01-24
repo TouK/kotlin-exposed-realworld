@@ -3,39 +3,38 @@ services:
 
   db:
     image: postgres:11
+    environment:
+      POSTGRES_DB: realworld
+      POSTGRES_USER: realworld
+      POSTGRES_PASSWORD: realworld
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - db-data:/var/lib/postgresql/data
-    networks:
-      - app
 
   app:
-    image: docker-gitlab.touk.pl/pjg/kotlin-spring-realworld:$TAG
+    image: touk/kotlin-spring-realworld:$TAG
+    build:
+      context: ../
+      dockerfile: docker/app.Dockerfile
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/realworld
-    networks:
-      - app
+      SPRING_DATASOURCE_USERNAME: realworld
+      SPRING_DATASOURCE_PASSWORD: realworld
     depends_on:
       - db
+    command: ["/tools/wait-for-it.sh", "db:5432", "-t", "30", "--", "./run-app.sh"]
 
   acceptance_tests:
-    image: docker-gitlab.touk.pl/pjg/realworld-acceptance-tests:$TAG
+    image: touk/realworld-acceptance-tests:$TAG
     build:
-      context: ./
-      dockerfile: acceptance.Dockerfile
+      context: ../
+      dockerfile: docker/acceptance.Dockerfile
     environment:
       APIURL: http://app:8080
-    networks:
-      - app
     depends_on:
       - app
-    working_dir: /acceptance
     volumes:
-      - ../acceptance:/acceptance
-    command: ["/tools/wait-for-it.sh", "app:8080", "--", "./run-api-tests.sh"]
-
-networks:
-  app:
+      - ../acceptance/newman:/acceptance/newman
+    command: ["/tools/wait-for-it.sh", "app:8080", "-t", "30", "--", "./run-api-tests.sh"]
 
 volumes:
   db-data:

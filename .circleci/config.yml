@@ -1,0 +1,61 @@
+version: 2
+jobs:
+  build:
+    branches:
+      only:
+        - master
+        - circleci
+
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+
+    docker:
+      - image: circleci/openjdk:8-jdk
+        environment:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/realworld
+          SPRING_DATASOURCE_USERNAME: realworld
+          SPRING_DATASOURCE_PASSWORD: realworld
+
+      - image: circleci/postgres:11-alpine
+        environment:
+          POSTGRES_DB: realworld
+          POSTGRES_USER: realworld
+          POSTGRES_PASSWORD: realworld
+
+    working_directory: ~/kotlin-spring-realworld
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            - v1-dependencies-
+
+      - run:
+          name: Fetch dependencies
+          command: ./gradlew dependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      - run:
+          name: Build application
+          command: ./gradlew build -x test
+
+      - run:
+          name: Install docker-compose and envsubst
+          command: |
+            curl -L https://github.com/docker/compose/releases/download/1.23.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+            sudo apt-get update && sudo apt-get install -y gettext-base
+
+      - setup_remote_docker
+
+      - run:
+          name: Acceptance tests
+          command: cd docker && ./run-tests.sh
