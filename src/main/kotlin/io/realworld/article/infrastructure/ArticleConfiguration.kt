@@ -6,6 +6,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 
 @Configuration
-@ComponentScan(basePackages = ["io.realworld.article"])
+@ComponentScan("io.realworld.article")
 @Import(SecurityConfiguration::class)
 class ArticleConfiguration

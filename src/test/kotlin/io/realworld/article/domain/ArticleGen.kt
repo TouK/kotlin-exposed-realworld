@@ -5,7 +5,7 @@ import io.realworld.user.domain.User
 
 object ArticleGen {
     fun build(user: User, tags: List<Tag> = emptyList()) = Article(
-            slug = Gen.alphanumeric(10),
+            slug = Gen.alphanumeric(10).let(::Slug),
             title = Gen.alphanumeric(),
             description = Gen.alphanumeric(100),
             body = Gen.alphanumeric(1000),

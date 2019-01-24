@@ -1,6 +1,7 @@
 package io.realworld.article.endpoint
 
 import io.realworld.article.domain.ArticleService
+import io.realworld.article.domain.Slug
 import io.realworld.article.query.ArticleQueryService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -31,7 +32,7 @@ class ArticleEndpoint(
     fun feed() = ArticlesResponse(articleQueryService.findAllOrderByMostRecent())
 
     @GetMapping("/{$SLUG_PARAM}")
-    fun get(@PathVariable(name = SLUG_PARAM, required = true) slug: String) =
+    fun get(@PathVariable(name = SLUG_PARAM, required = true) slug: Slug) =
             ArticleResponse(articleQueryService.findBy(slug))
 
     @PostMapping
@@ -39,7 +40,7 @@ class ArticleEndpoint(
             ArticleResponse(articleService.create(request.article))
 
     @PutMapping("/{$SLUG_PARAM}")
-    fun update(@PathVariable(name = SLUG_PARAM, required = true) slug: String, @Valid @RequestBody request: UpdateArticleRequest) =
+    fun update(@PathVariable(name = SLUG_PARAM, required = true) slug: Slug, @Valid @RequestBody request: UpdateArticleRequest) =
             ArticleResponse(articleService.update(slug, request.article))
 
 }

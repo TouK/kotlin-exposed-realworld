@@ -28,7 +28,7 @@ class ArticleService(
         return articleWriteRepository.create(article).toDto(loggedUser.toDto())
     }
 
-    fun update(slug: String, updateArticleDto: UpdateArticleDto): ArticleDto {
+    fun update(slug: Slug, updateArticleDto: UpdateArticleDto): ArticleDto {
         val article = articleReadRepository.getBy(slug)
         val updatedArticle = updateArticleDto.run {
             article.copy(description = description ?: article.description, body = body ?: article.body)

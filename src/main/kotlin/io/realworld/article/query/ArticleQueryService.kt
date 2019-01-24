@@ -3,6 +3,7 @@ package io.realworld.article.query
 import io.realworld.article.domain.Article
 import io.realworld.article.domain.ArticleFavoriteReadRepositories
 import io.realworld.article.domain.ArticleReadRepository
+import io.realworld.article.domain.Slug
 import io.realworld.article.endpoint.ArticleDto
 import io.realworld.article.endpoint.toDto
 import io.realworld.security.domain.LoggedUserService
@@ -25,7 +26,7 @@ class ArticleQueryService(
         return articleReadRepository.findAll().map { toDto(it, loggedUser) }
     }
 
-    fun findBy(slug: String): ArticleDto {
+    fun findBy(slug: Slug): ArticleDto {
         val loggedUser = loggedUserService.loggedUser()
         val article = articleReadRepository.getBy(slug)
         return toDto(article, loggedUser)

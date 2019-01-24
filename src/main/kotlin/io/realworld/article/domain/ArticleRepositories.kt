@@ -5,9 +5,9 @@ import io.realworld.shared.refs.ArticleId
 interface ArticleReadRepository {
     fun findAll(): List<Article>
     fun findBy(articleId: ArticleId): Article?
-    fun findBy(slug: String): Article?
+    fun findBy(slug: Slug): Article?
 
-    fun getBy(slug: String) = findBy(slug) ?: throw ArticleNotFoundException(slug)
+    fun getBy(slug: Slug) = findBy(slug) ?: throw ArticleNotFoundException(slug.toString())
 }
 
 interface ArticleWriteRepository {

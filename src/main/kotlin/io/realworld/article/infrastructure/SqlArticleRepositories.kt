@@ -3,10 +3,12 @@ package io.realworld.article.infrastructure
 import io.realworld.article.domain.Article
 import io.realworld.article.domain.ArticleReadRepository
 import io.realworld.article.domain.ArticleWriteRepository
+import io.realworld.article.domain.Slug
 import io.realworld.article.domain.TagId
 import io.realworld.shared.infrastructure.getOrThrow
 import io.realworld.shared.infrastructure.longWrapper
 import io.realworld.shared.infrastructure.selectSingleOrNull
+import io.realworld.shared.infrastructure.stringWrapper
 import io.realworld.shared.infrastructure.updateExactlyOne
 import io.realworld.shared.infrastructure.zonedDateTime
 import io.realworld.shared.refs.ArticleId
@@ -22,7 +24,7 @@ import org.springframework.stereotype.Component
 
 object ArticleTable : Table("articles") {
     val id = articleId("id").primaryKey().autoIncrement()
-    val slug = text("slug")
+    val slug = slug("slug")
     val title = text("title")
     val authorId = userId("user_id").references(UserTable.id)
     val description = text("description")
@@ -49,7 +51,7 @@ class SqlArticleReadRepository : ArticleReadRepository {
                     .select { ArticleTable.id eq articleId }
                     .toArticle()
 
-    override fun findBy(slug: String) =
+    override fun findBy(slug: Slug) =
             ArticleTable
                     .selectSingleOrNull { ArticleTable.slug eq slug }?.toArticle()
 }
@@ -104,3 +106,5 @@ fun UpdateBuilder<Any>.from(article: Article) = this.run {
 fun Table.articleId(name: String) = longWrapper<ArticleId>(name, ArticleId::Persisted, ArticleId::value)
 
 fun Table.tagId(name: String) = longWrapper<TagId>(name, TagId::Persisted, TagId::value)
+
+fun Table.slug(name: String) = stringWrapper(name, ::Slug, Slug::value)
