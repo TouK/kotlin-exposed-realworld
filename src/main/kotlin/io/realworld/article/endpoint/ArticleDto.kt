@@ -51,7 +51,7 @@ data class UpdateArticleDto(
 )
 
 fun Article.toDto(author: UserDto, favorited: Boolean = false, favoritesCount: Int = 0) = ArticleDto(
-        slug = this.slug,
+        slug = this.slug.value,
         title = this.title,
         description = this.description,
         body = this.body,

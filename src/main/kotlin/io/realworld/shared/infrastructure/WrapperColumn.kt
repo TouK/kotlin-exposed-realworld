@@ -4,6 +4,7 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.LongColumnType
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.TextColumnType
 import java.math.BigDecimal
 import kotlin.reflect.KClass
 
@@ -53,10 +54,32 @@ class LongWrapperColumnType<out Wrapper : Any>(
     }
 }
 
+class StringWrapperColumnType<out Wrapper : Any>(
+        wrapperClazz: KClass<Wrapper>,
+        instanceCreator: (String) -> Wrapper,
+        valueExtractor: (Wrapper) -> String
+) : WrapperColumnType<String, Wrapper>(TextColumnType(), String::class, wrapperClazz, instanceCreator, valueExtractor) {
+
+    override fun valueFromDB(value: Any) = when (value) {
+        is java.sql.Clob -> instanceCreator(rawColumnType.valueFromDB(value) as String)
+        is ByteArray -> instanceCreator(rawColumnType.valueFromDB(value) as String)
+        is String -> instanceCreator(rawColumnType.valueFromDB(value) as String)
+        else -> error("Database value $value of class ${value::class.qualifiedName} is not valid $rawClazz")
+    }
+}
+
 inline fun <reified Wrapper : Any> Table.longWrapper(
     name: String,
     noinline instanceCreator: (Long) -> Wrapper,
     noinline valueExtractor: (Wrapper) -> Long
 ): Column<Wrapper> = registerColumn(
     name, LongWrapperColumnType(Wrapper::class, instanceCreator, valueExtractor)
+)
+
+inline fun <reified Wrapper : Any> Table.stringWrapper(
+        name: String,
+        noinline instanceCreator: (String) -> Wrapper,
+        noinline valueExtractor: (Wrapper) -> String
+): Column<Wrapper> = registerColumn(
+        name, StringWrapperColumnType(Wrapper::class, instanceCreator, valueExtractor)
 )

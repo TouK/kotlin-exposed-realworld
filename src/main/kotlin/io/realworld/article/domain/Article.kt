@@ -7,7 +7,7 @@ import java.time.ZonedDateTime
 data class Article(
         val id: ArticleId = ArticleId.New,
         val title: String,
-        val slug: String = title.toSlug(),
+        val slug: Slug = Slug.fromTitle(title),
         val description: String,
         val body: String,
         val authorId: UserId,
@@ -15,7 +15,13 @@ data class Article(
         val createdAt: ZonedDateTime = ZonedDateTime.now(),
         val updatedAt: ZonedDateTime = ZonedDateTime.now()
 ) {
-    fun withTitle(title: String) = copy(title = title, slug = title.toSlug())
+    fun withTitle(title: String) = copy(title = title, slug = Slug.fromTitle(title))
 }
 
-private fun String.toSlug() = this.toLowerCase().replace(Regex("\\W+"), "-")
+data class Slug(
+        val value: String
+) {
+    companion object {
+        fun fromTitle(title: String) = Slug(title.toLowerCase().replace(Regex("\\W+"), "-"))
+    }
+}
