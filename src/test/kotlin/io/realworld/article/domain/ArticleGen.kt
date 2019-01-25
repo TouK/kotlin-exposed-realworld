@@ -1,15 +1,16 @@
 package io.realworld.article.domain
 
 import io.realworld.shared.Gen
-import io.realworld.user.domain.User
+import io.realworld.user.domain.Author
 
 object ArticleGen {
-    fun build(user: User, tags: List<Tag> = emptyList()) = Article(
+
+    fun build(author: Author, tags: List<Tag> = emptyList()) = Article(
             slug = Gen.alphanumeric(10).let(::Slug),
             title = Gen.alphanumeric(),
             description = Gen.alphanumeric(100),
             body = Gen.alphanumeric(1000),
-            authorId = user.id,
+            authorId = author.id,
             tags = tags
     )
 }

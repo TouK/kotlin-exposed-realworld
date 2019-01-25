@@ -17,7 +17,8 @@ import javax.validation.Valid
 @RequestMapping(ArticleEndpoint.PATH)
 class ArticleEndpoint(
         private val articleQueryService: ArticleQueryService,
-        private val articleService: ArticleService
+        private val articleService: ArticleService,
+        private val articleConverter: ArticleConverter
 ) {
 
     companion object {
@@ -27,22 +28,22 @@ class ArticleEndpoint(
     }
 
     @GetMapping
-    fun list() = ArticlesResponse(articleQueryService.findAll())
+    fun list() = ArticlesResponse(articleQueryService.findAll().map(articleConverter::toDto))
 
     @GetMapping(FEED_PATH)
-    fun feed() = ArticlesResponse(articleQueryService.findAllOrderByMostRecent())
+    fun feed() = ArticlesResponse(articleQueryService.findAllOrderByMostRecent().map(articleConverter::toDto))
 
     @GetMapping("/{$SLUG_PARAM}")
     fun get(@PathVariable(name = SLUG_PARAM, required = true) slug: Slug) =
-            ArticleResponse(articleQueryService.findBy(slug))
+            ArticleResponse(articleQueryService.findBy(slug).let(articleConverter::toDto))
 
     @PostMapping
     fun create(@Valid @RequestBody request: CreateArticleRequest) =
-            ArticleResponse(articleService.create(request.article))
+            ArticleResponse(articleService.create(request.article).let(articleConverter::toDto))
 
     @PutMapping("/{$SLUG_PARAM}")
     fun update(@PathVariable(name = SLUG_PARAM, required = true) slug: Slug, @Valid @RequestBody request: UpdateArticleRequest) =
-            ArticleResponse(articleService.update(slug, request.article))
+            ArticleResponse(articleService.update(slug, request.article).let(articleConverter::toDto))
 
     @DeleteMapping("/{$SLUG_PARAM}")
     fun delete(@PathVariable(name = SLUG_PARAM, required = true) slug: Slug) {

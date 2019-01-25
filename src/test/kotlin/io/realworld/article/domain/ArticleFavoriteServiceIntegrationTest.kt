@@ -1,13 +1,11 @@
-package io.realworld.article.infrastructure
+package io.realworld.article.domain
 
-import io.realworld.article.domain.ArticleFavoriteReadRepository
-import io.realworld.article.domain.ArticleFavoriteWriteRepository
-import io.realworld.article.domain.ArticleGen
-import io.realworld.article.domain.ArticleWriteRepository
+import io.realworld.article.infrastructure.ArticleConfiguration
+import io.realworld.shared.TestTransactionConfiguration
+import io.realworld.test.expectation.Expectation
+import io.realworld.test.expectation.ExpectationConfiguration
 import io.realworld.test.precondition.Precondition
 import io.realworld.test.precondition.PreconditionConfiguration
-import io.realworld.shared.TestTransactionConfiguration
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional
         classes = [
             ArticleConfiguration::class,
             PreconditionConfiguration::class,
+            ExpectationConfiguration::class,
             TestTransactionConfiguration::class
         ]
 )
@@ -31,32 +30,31 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class SqlArticleFavoriteRepositoryTest {
+internal class ArticleFavoriteServiceIntegrationTest {
 
     @Autowired
     lateinit var given: Precondition
 
     @Autowired
-    lateinit var articleWriteRepository: ArticleWriteRepository
+    lateinit var then: Expectation
 
     @Autowired
-    lateinit var articleFavoriteWriteRepository: ArticleFavoriteWriteRepository
-
-    @Autowired
-    lateinit var articleFavoriteReadRepository: ArticleFavoriteReadRepository
+    lateinit var articleFavoriteService: ArticleFavoriteService
 
     @Test
-    fun `should favorite and unfavorite article`() {
+    fun `should mark article as favorite and unfavorite`() {
         val author = given.user.exists()
-        val article = articleWriteRepository.create(ArticleGen.build(author))
-        val user = given.user.exists()
+        given.user.loggedUser()
+        val article = given.article.exist(ArticleGen.build(author))
 
-        articleFavoriteWriteRepository.addFor(article.id, user.id)
+        articleFavoriteService.favorite(article.slug)
 
-        assertThat(articleFavoriteReadRepository.findBy(article.id)).containsExactly(user.id)
+        then.article.isFavorited(article.slug)
+        then.article.hasFavoriteCount(article.slug, 1)
 
-        articleFavoriteWriteRepository.removeFor(article.id, user.id)
+        articleFavoriteService.unfavorite(article.slug)
 
-        assertThat(articleFavoriteReadRepository.findBy(article.id)).isEmpty()
+        then.article.isNotFavorited(article.slug)
+        then.article.hasFavoriteCount(article.slug, 0)
     }
 }

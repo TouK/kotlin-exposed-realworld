@@ -57,16 +57,16 @@ internal class ArticleServiceIntegrationTest {
 
         val createArticleDto = CreateArticleDtoGen.build(tags = tagNames)
 
-        val articleDto = articleService.create(createArticleDto)
+        val article = articleService.create(createArticleDto)
 
-        articleDto.run {
+        article.run {
             assertThat(title).isEqualTo(createArticleDto.title)
             assertThat(description).isEqualTo(createArticleDto.description)
             assertThat(body).isEqualTo(createArticleDto.body)
-            assertThat(tagList).isEqualTo(tagNames)
+            assertThat(tags).extracting<String>(Tag::name).containsExactlyInAnyOrderElementsOf(tagNames)
         }
 
-        then.article.existsFor(Slug(articleDto.slug))
+        then.article.existsFor(article.slug)
     }
 
     @Test
