@@ -12,15 +12,15 @@ import org.junit.jupiter.api.Test
 
 internal class ArticleServiceTest {
 
-    val articleReadRepository = mock<ArticleReadRepository>()
-    val articleWriteRepository = mock<ArticleWriteRepository>()
-    val loggedUserService = mock<LoggedUserService>()
-    val tagService = mock<TagService>()
+    private val articleReadRepository = mock<ArticleReadRepository>()
+    private val articleWriteRepository = mock<ArticleWriteRepository>()
+    private val loggedUserService = mock<LoggedUserService>()
+    private val tagService = mock<TagService>()
 
-    val user = UserGen.build()
-    val article = ArticleGen.build(user = user)
+    private val user = UserGen.build()
+    private val article = ArticleGen.build(author = user)
 
-    val articleService = ArticleService(articleReadRepository, articleWriteRepository, loggedUserService, tagService)
+    private val articleService = ArticleService(articleReadRepository, articleWriteRepository, loggedUserService, tagService)
 
     @BeforeEach
     fun setup() {

@@ -1,5 +1,6 @@
 package io.realworld.user.domain
 
+import io.realworld.shared.domain.ApplicationException
 import io.realworld.shared.refs.UserId
 
 interface UserReadRepository {
@@ -14,3 +15,5 @@ interface UserWriteRepository {
     fun create(user: User): User
     fun save(user: User)
 }
+
+class UserNotFoundException(userId: UserId) : ApplicationException("User with id $userId not found")

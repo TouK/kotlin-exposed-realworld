@@ -8,3 +8,6 @@ data class User(
         val email: String,
         val password: String
 )
+
+typealias Author = User
+typealias LoggedUser = User

@@ -1,11 +1,8 @@
 package io.realworld.article.domain
 
-import io.realworld.article.endpoint.ArticleDto
 import io.realworld.article.endpoint.CreateArticleDto
 import io.realworld.article.endpoint.UpdateArticleDto
-import io.realworld.article.endpoint.toDto
 import io.realworld.security.domain.LoggedUserService
-import io.realworld.user.endpoint.toDto
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -18,25 +15,23 @@ class ArticleService(
         private val tagService: TagService
 ) {
 
-    fun create(createArticleDto: CreateArticleDto): ArticleDto {
+    fun create(createArticleDto: CreateArticleDto): Article {
         val loggedUser = loggedUserService.loggedUserOrThrow()
         val tags = tagService.storeOrLoad(createArticleDto.tagList)
         val article = createArticleDto.run {
             Article(title = this.title, description = this.description, authorId = loggedUser.id, tags = tags,
                     body = this.body)
         }
-        return articleWriteRepository.create(article).toDto(loggedUser.toDto())
+        return articleWriteRepository.create(article)
     }
 
-    fun update(slug: Slug, updateArticleDto: UpdateArticleDto): ArticleDto {
+    fun update(slug: Slug, updateArticleDto: UpdateArticleDto): Article {
         val article = articleReadRepository.getBy(slug)
         val updatedArticle = updateArticleDto.run {
             article.copy(description = description ?: article.description, body = body ?: article.body)
                     .withTitle(title ?: article.title)
         }
-        return updatedArticle
-                .apply(articleWriteRepository::save)
-                .toDto(loggedUserService.loggedUserOrThrow().toDto())
+        return updatedArticle.also(articleWriteRepository::save)
     }
 
     fun delete(slug: Slug) {

@@ -1,5 +1,6 @@
 package io.realworld.article.domain
 
+import io.realworld.shared.domain.ApplicationException
 import io.realworld.shared.refs.ArticleId
 
 interface ArticleReadRepository {
@@ -15,3 +16,5 @@ interface ArticleWriteRepository {
     fun save(article: Article)
     fun delete(article: Article)
 }
+
+class ArticleNotFoundException(slug: String) : ApplicationException("Article for slug $slug not found")

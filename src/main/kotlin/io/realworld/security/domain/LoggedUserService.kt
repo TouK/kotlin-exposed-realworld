@@ -1,6 +1,7 @@
 package io.realworld.security.domain
 
 import io.realworld.shared.domain.ApplicationException
+import io.realworld.user.domain.LoggedUser
 import io.realworld.user.domain.User
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service
 @Service
 class LoggedUserService {
 
-    fun loggedUser(): User? {
+    fun loggedUser(): LoggedUser? {
         val authentication = SecurityContextHolder.getContext().authentication
         return if (authentication is UsernamePasswordAuthenticationToken) {
                 authentication.principal as User
