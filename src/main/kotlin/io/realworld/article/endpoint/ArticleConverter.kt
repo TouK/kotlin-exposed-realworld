@@ -3,6 +3,7 @@ package io.realworld.article.endpoint
 import io.realworld.article.domain.Article
 import io.realworld.article.domain.ArticleFavoriteReadRepository
 import io.realworld.security.domain.LoggedUserService
+import io.realworld.user.endpoint.toDto
 import io.realworld.user.query.UserQueryService
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -20,6 +21,6 @@ class ArticleConverter(
         val loggedUser = loggedUserService.loggedUser()
         val author = userQueryService.findBy(article.authorId)
         val favorited = loggedUser?.let { favoritedBy.contains(it.id) } ?: false
-        return article.toDto(author, favorited, favoritedBy.count())
+        return article.toDto(author.toDto(), favorited, favoritedBy.count())
     }
 }

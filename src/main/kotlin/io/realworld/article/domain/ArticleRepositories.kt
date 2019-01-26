@@ -14,7 +14,7 @@ interface ArticleReadRepository {
 interface ArticleWriteRepository {
     fun create(article: Article): Article
     fun save(article: Article)
-    fun delete(article: Article)
+    fun delete(articleId: ArticleId)
 }
 
 class ArticleNotFoundException(slug: String) : ApplicationException("Article for slug $slug not found")

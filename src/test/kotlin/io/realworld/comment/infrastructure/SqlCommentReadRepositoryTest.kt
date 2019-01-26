@@ -3,9 +3,9 @@ package io.realworld.comment.infrastructure
 import io.realworld.article.domain.ArticleGen
 import io.realworld.article.infrastructure.ArticleConfiguration
 import io.realworld.comment.domain.CommentGen
+import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.test.precondition.Precondition
 import io.realworld.test.precondition.PreconditionConfiguration
-import io.realworld.shared.TestTransactionConfiguration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -46,6 +46,6 @@ internal class SqlCommentReadRepositoryTest {
         val article = given.article.exist(ArticleGen.build(author))
         val comment = given.comment.exist(CommentGen.build(article = article, author = commenter))
 
-        assertThat(sqlCommentRepository.findAllByArticleId(article.id)).containsExactly(comment)
+        assertThat(sqlCommentRepository.findAllBy(article.id)).containsExactly(comment)
     }
 }

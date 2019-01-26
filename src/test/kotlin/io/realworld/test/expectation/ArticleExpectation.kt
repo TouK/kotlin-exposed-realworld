@@ -3,11 +3,14 @@ package io.realworld.test.expectation
 import io.realworld.article.domain.ArticleReadRepository
 import io.realworld.article.domain.Slug
 import io.realworld.article.endpoint.ArticleConverter
+import io.realworld.article.infrastructure.ArticleConfiguration
 import io.realworld.article.query.ArticleQueryService
 import org.assertj.core.api.Assertions.assertThat
+import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Component
 
 @Component
+@Import(ArticleConfiguration::class)
 class ArticleExpectation(
         private val articleReadRepository: ArticleReadRepository,
         private val articleQueryService: ArticleQueryService,

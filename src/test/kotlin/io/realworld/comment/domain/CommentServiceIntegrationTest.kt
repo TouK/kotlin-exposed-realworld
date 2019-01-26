@@ -1,8 +1,9 @@
-package io.realworld.article.domain
+package io.realworld.comment.domain
 
-import io.realworld.article.endpoint.CreateArticleDtoGen
-import io.realworld.article.endpoint.UpdateArticleDto
-import io.realworld.article.infrastructure.ArticleConfiguration
+import io.realworld.article.domain.Article
+import io.realworld.article.domain.ArticleGen
+import io.realworld.comment.endpoint.CreateCommentDto
+import io.realworld.comment.infrastructure.CommentConfiguration
 import io.realworld.shared.Gen
 import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.test.expectation.Expectation
@@ -25,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(
         classes = [
-            ArticleConfiguration::class,
+            CommentConfiguration::class,
             PreconditionConfiguration::class,
             ExpectationConfiguration::class,
             TestTransactionConfiguration::class
@@ -36,10 +37,10 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class ArticleServiceIntegrationTest {
+internal class CommentServiceIntegrationTest {
 
     @Autowired
-    lateinit var articleService: ArticleService
+    lateinit var commentService: CommentService
 
     @Autowired
     lateinit var given: Precondition
@@ -49,49 +50,47 @@ internal class ArticleServiceIntegrationTest {
 
     lateinit var loggedUser: LoggedUser
 
+    lateinit var article: Article
+
     @BeforeEach
     internal fun setUp() {
         loggedUser = given.user.loggedUser()
+        val author = given.user.exists()
+        article = given.article.exist(ArticleGen.build(author = author))
     }
 
     @Test
-    fun `should save article`() {
-        val tagAlpha = TagGen.build()
-        val tagBravo = TagGen.build()
-        val tagNames = arrayOf(tagAlpha, tagBravo).map(Tag::name)
+    fun `should create comment`() {
+        val createCommentDto = CreateCommentDto(Gen.alphanumeric(300))
+        val createdComment = commentService.create(article.slug, createCommentDto)
 
-        given.tag.exists(tagAlpha)
+        then.comment.exists(createdComment.id)
 
-        val createArticleDto = CreateArticleDtoGen.build(tags = tagNames)
-
-        val article = articleService.create(createArticleDto)
-
-        article.run {
-            assertThat(title).isEqualTo(createArticleDto.title)
-            assertThat(description).isEqualTo(createArticleDto.description)
-            assertThat(body).isEqualTo(createArticleDto.body)
-            assertThat(tags).extracting<String>(Tag::name).containsExactlyInAnyOrderElementsOf(tagNames)
+        createdComment.run {
+            assertThat(body).isEqualTo(createCommentDto.body)
+            assertThat(authorId).isEqualTo(loggedUser.id)
+            assertThat(articleId).isEqualTo(article.id)
         }
-
-        then.article.existsFor(article.slug)
     }
 
     @Test
-    fun `should update article`() {
-        val article = given.article.exist(ArticleGen.build(author = loggedUser))
-        val updateArticleDto = UpdateArticleDto(title = Gen.alphanumeric(20), body = null, description = null)
+    fun `should delete comment`() {
+        val comment = given.comment.exist(CommentGen.build(author = loggedUser, article = article))
+        then.comment.exists(comment.id)
 
-        val updatedArticleDto = articleService.update(article.slug, updateArticleDto)
+        commentService.delete(comment.id)
 
-        assertThat(updatedArticleDto.title).isEqualTo(updateArticleDto.title)
+        then.comment.notExists(comment.id)
     }
 
     @Test
-    fun `should delete article`() {
-        val article = given.article.exist(ArticleGen.build(author = loggedUser))
+    fun `should delete comments for article`() {
+        val commentAlpha = given.comment.exist(CommentGen.build(author = loggedUser, article = article))
+        val commentBravo = given.comment.exist(CommentGen.build(author = loggedUser, article = article))
 
-        articleService.delete(article.slug)
+        commentService.deleteAllFor(article.id)
 
-        then.article.notExistsFor(article.slug)
+        then.comment.notExists(commentAlpha.id)
+        then.comment.notExists(commentBravo.id)
     }
 }

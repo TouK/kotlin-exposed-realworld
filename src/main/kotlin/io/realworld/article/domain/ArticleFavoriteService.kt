@@ -2,11 +2,11 @@ package io.realworld.article.domain
 
 import io.realworld.security.domain.LoggedUserService
 import io.realworld.user.domain.LoggedUser
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+@Service
 @Transactional
-@Component
 class ArticleFavoriteService(
         private val articleReadRepository: ArticleReadRepository,
         private val articleFavoriteWriteRepository: ArticleFavoriteWriteRepository,

@@ -2,15 +2,17 @@ package io.realworld.article.domain
 
 import io.realworld.article.endpoint.CreateArticleDto
 import io.realworld.article.endpoint.UpdateArticleDto
+import io.realworld.comment.domain.CommentService
 import io.realworld.security.domain.LoggedUserService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-@Transactional
 @Service
+@Transactional
 class ArticleService(
         private val articleReadRepository: ArticleReadRepository,
         private val articleWriteRepository: ArticleWriteRepository,
+        private val commentService: CommentService,
         private val loggedUserService: LoggedUserService,
         private val tagService: TagService
 ) {
@@ -36,6 +38,7 @@ class ArticleService(
 
     fun delete(slug: Slug) {
         val article = articleReadRepository.getBy(slug)
-        articleWriteRepository.delete(article)
+        commentService.deleteAllFor(article.id)
+        articleWriteRepository.delete(article.id)
     }
 }
