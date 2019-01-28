@@ -50,6 +50,10 @@ data class UpdateArticleDto(
         val body: String?
 )
 
+data class TagsResponse(
+        val tags: List<String>
+)
+
 fun Article.toDto(author: ProfileDto, favorited: Boolean = false, favoritesCount: Int = 0) = ArticleDto(
         slug = this.slug.value,
         title = this.title,

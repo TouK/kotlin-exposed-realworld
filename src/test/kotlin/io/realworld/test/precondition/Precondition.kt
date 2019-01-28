@@ -9,3 +9,7 @@ class Precondition(
         val article: ArticlePrecondition,
         val comment: CommentPrecondition
 )
+
+interface Clearable {
+    fun empty()
+}
