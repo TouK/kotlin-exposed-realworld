@@ -3,6 +3,7 @@ package io.realworld.user.endpoint
 import io.realworld.security.domain.JwtService
 import io.realworld.user.domain.UserAuthenticationService
 import io.realworld.user.domain.UserRegisterService
+import io.realworld.user.domain.Username
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -32,6 +33,6 @@ class UsersEndpoint(
     @PostMapping
     fun register(@Valid @RequestBody registerRequest: RegisterRequest) = UserResponse(
             registerRequest.user.run {
-                userRegisterService.register(username, email, password).toDto()
+                userRegisterService.register(Username(username), email, password).toDto()
             })
 }

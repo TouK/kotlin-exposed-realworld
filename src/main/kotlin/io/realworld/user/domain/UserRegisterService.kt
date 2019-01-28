@@ -11,11 +11,13 @@ class UserRegisterService(
         private val userWriteRepository: UserWriteRepository
 ) {
 
-    fun register(username: String, email: String, password: String): User {
+    fun register(username: Username, email: String, password: String): User {
         val user = User(
                 username = username,
                 password = passwordEncoder.encode(password),
-                email = email
+                email = email,
+                bio = null,
+                image = null
         )
         return userWriteRepository.create(user)
     }

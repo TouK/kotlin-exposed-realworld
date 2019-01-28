@@ -2,7 +2,7 @@ package io.realworld.article.endpoint
 
 import io.realworld.article.domain.Article
 import io.realworld.article.domain.Tag
-import io.realworld.user.endpoint.UserDto
+import io.realworld.user.endpoint.ProfileDto
 import java.time.ZonedDateTime
 
 data class ArticlesResponse(
@@ -26,7 +26,7 @@ data class ArticleDto(
         val updatedAt: ZonedDateTime,
         val favorited: Boolean,
         val favoritesCount: Int,
-        val author: UserDto
+        val author: ProfileDto
 )
 
 data class CreateArticleRequest(
@@ -50,7 +50,7 @@ data class UpdateArticleDto(
         val body: String?
 )
 
-fun Article.toDto(author: UserDto, favorited: Boolean = false, favoritesCount: Int = 0) = ArticleDto(
+fun Article.toDto(author: ProfileDto, favorited: Boolean = false, favoritesCount: Int = 0) = ArticleDto(
         slug = this.slug.value,
         title = this.title,
         description = this.description,

@@ -14,11 +14,11 @@ class ArticleFavoriteService(
 ) {
 
     fun favorite(slug: Slug) = processArticle(slug) { article, loggedUser ->
-        article.also { articleFavoriteWriteRepository.addFor(article.id, loggedUser.id) }
+        article.also { articleFavoriteWriteRepository.create(article.id, loggedUser.id) }
     }
 
     fun unfavorite(slug: Slug) = processArticle(slug) { article, loggedUser ->
-        article.also { articleFavoriteWriteRepository.removeFor(article.id, loggedUser.id) }
+        article.also { articleFavoriteWriteRepository.delete(article.id, loggedUser.id) }
     }
 
     private fun processArticle(slug: Slug, body: (Article, LoggedUser) -> Article): Article {

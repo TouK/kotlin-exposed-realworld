@@ -10,7 +10,7 @@ class CommentConverter(
         private val userQueryService: UserQueryService
 ) {
     fun toDto(comment: Comment): CommentDto {
-        val author = userQueryService.findBy(comment.authorId)
+        val author = userQueryService.getBy(comment.authorId)
         return comment.toDto(author.toDto())
     }
 }

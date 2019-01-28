@@ -29,14 +29,14 @@ class SqlArticleFavoriteReadRepository : ArticleFavoriteReadRepository {
 
 @Repository
 class SqlArticleFavoriteWriteRepository : ArticleFavoriteWriteRepository {
-    override fun addFor(articleId: ArticleId, userId: UserId) {
+    override fun create(articleId: ArticleId, userId: UserId) {
         ArticleFavoriteTable.insert {
             it[ArticleFavoriteTable.articleId] = articleId
             it[ArticleFavoriteTable.userId] = userId
         }
     }
 
-    override fun removeFor(articleId: ArticleId, userId: UserId) {
+    override fun delete(articleId: ArticleId, userId: UserId) {
         ArticleFavoriteTable.deleteWhere {
             (ArticleFavoriteTable.articleId eq articleId) and
                     (ArticleFavoriteTable.userId eq userId)
