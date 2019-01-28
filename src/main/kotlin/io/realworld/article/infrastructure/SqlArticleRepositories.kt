@@ -77,9 +77,9 @@ class SqlArticleWriteRepository : ArticleWriteRepository {
         ArticleTable.updateExactlyOne({ ArticleTable.id eq article.id }) { it.from(article) }
     }
 
-    override fun delete(article: Article) {
-        ArticleTagTable.deleteWhere { ArticleTagTable.articleId eq article.id }
-        ArticleTable.deleteWhere { ArticleTable.id eq article.id }
+    override fun delete(articleId: ArticleId) {
+        ArticleTagTable.deleteWhere { ArticleTagTable.articleId eq articleId }
+        ArticleTable.deleteWhere { ArticleTable.id eq articleId }
     }
 }
 

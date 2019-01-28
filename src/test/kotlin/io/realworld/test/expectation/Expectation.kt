@@ -4,5 +4,6 @@ import org.springframework.stereotype.Component
 
 @Component
 class Expectation(
-        val article: ArticleExpectation
+        val article: ArticleExpectation,
+        val comment: CommentExpectation
 )

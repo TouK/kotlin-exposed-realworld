@@ -9,5 +9,4 @@ class CommentPrecondition(
         private val commentWriteRepository: CommentWriteRepository
 ) {
     fun exist(comment: Comment) = commentWriteRepository.create(comment)
-
 }
