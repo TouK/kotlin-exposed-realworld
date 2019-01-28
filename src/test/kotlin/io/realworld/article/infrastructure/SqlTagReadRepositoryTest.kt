@@ -1,10 +1,10 @@
-package io.realworld.article.domain
+package io.realworld.article.infrastructure
 
-import io.realworld.article.infrastructure.ArticleConfiguration
+import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.test.precondition.Precondition
 import io.realworld.test.precondition.PreconditionConfiguration
-import io.realworld.shared.TestTransactionConfiguration
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,37 +28,32 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class TagServiceIntegrationTest {
+class SqlTagReadRepositoryTest {
+
+    @Autowired
+    lateinit var tagReadRepository: SqlTagReadRepository
 
     @Autowired
     lateinit var given: Precondition
 
-    @Autowired
-    lateinit var tagReadRepository: TagReadRepository
-
-    @Autowired
-    lateinit var tagService: TagService
+    @BeforeEach
+    internal fun setUp() {
+        given.tag.empty()
+    }
 
     @Test
-    fun `should store or find tags`() {
-        val tagAlpha = TagGen.build()
-        val tagBravo = TagGen.build()
-        val tagCharlie = TagGen.build()
-        val tagDelta = TagGen.build()
-        val tagEcho = TagGen.build()
+    fun `should find tags by name`() {
+        val tagAlpha = given.tag.exists()
+        given.tag.exists()
 
-        val tagNames = arrayOf(tagAlpha, tagBravo, tagCharlie, tagDelta, tagEcho).map(Tag::name)
+        assertThat(tagReadRepository.findAllByNames(listOf(tagAlpha.name))).containsExactly(tagAlpha)
+    }
 
-        arrayOf(tagAlpha, tagBravo, tagCharlie).forEach { given.tag.exists(it) }
+    @Test
+    fun `should find all tags`() {
+        val tagAlpha = given.tag.exists()
+        val tagBravo = given.tag.exists()
 
-        val tags = tagService.storeOrLoad(tagNames)
-
-        assertThat(tags)
-                .extracting<String> { it.name }
-                .containsExactlyInAnyOrderElementsOf(tagNames)
-
-        assertThat(tagReadRepository.findAllByNames(tagNames))
-                .extracting<String> { it.name }
-                .containsExactlyInAnyOrderElementsOf(tagNames)
+        assertThat(tagReadRepository.findAll()).containsExactlyInAnyOrder(tagAlpha, tagBravo)
     }
 }

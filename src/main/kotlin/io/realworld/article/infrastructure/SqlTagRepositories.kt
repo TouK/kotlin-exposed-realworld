@@ -8,6 +8,7 @@ import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.springframework.stereotype.Component
 
 object TagTable : Table("tags") {
@@ -18,9 +19,12 @@ object TagTable : Table("tags") {
 @Component
 class SqlTagReadRepository : TagReadRepository {
 
-    override fun findByNames(names: List<String>) =
+    override fun findAllByNames(names: List<String>) =
             TagTable.select { TagTable.name inList names }
                     .map { it.toTag() }
+
+    override fun findAll() =
+            TagTable.selectAll().map { it.toTag() }
 }
 
 @Component

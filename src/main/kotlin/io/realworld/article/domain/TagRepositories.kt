@@ -1,7 +1,8 @@
 package io.realworld.article.domain
 
 interface TagReadRepository {
-    fun findByNames(names: List<String>): List<Tag>
+    fun findAllByNames(names: List<String>): List<Tag>
+    fun findAll(): List<Tag>
 }
 
 interface TagWriteRepository {

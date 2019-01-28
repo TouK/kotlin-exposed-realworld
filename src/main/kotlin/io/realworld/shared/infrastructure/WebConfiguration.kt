@@ -20,6 +20,6 @@ class SlugConverter : Converter<String, Slug> {
     override fun convert(source: String) = Slug(source)
 }
 
-class CommentIdConverter : Converter<Long, CommentId> {
-    override fun convert(source: Long) = CommentId.Persisted(source)
+class CommentIdConverter : Converter<String, CommentId> {
+    override fun convert(source: String) = CommentId.Persisted(source.toLong())
 }
