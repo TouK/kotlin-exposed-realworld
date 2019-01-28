@@ -1,11 +1,11 @@
-package io.realworld.article.domain
+package io.realworld.user.domain
 
-import io.realworld.article.infrastructure.ArticleConfiguration
 import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.test.expectation.Expectation
 import io.realworld.test.expectation.ExpectationConfiguration
 import io.realworld.test.precondition.Precondition
 import io.realworld.test.precondition.PreconditionConfiguration
+import io.realworld.user.infrastructure.UserConfiguration
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(
         classes = [
-            ArticleConfiguration::class,
+            UserConfiguration::class,
             PreconditionConfiguration::class,
             ExpectationConfiguration::class,
             TestTransactionConfiguration::class
@@ -31,10 +31,10 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class ArticleFavoriteServiceIntegrationTest {
+internal class UserFollowServiceIntegrationTest {
 
     @Autowired
-    lateinit var articleFavoriteService: ArticleFavoriteService
+    lateinit var userFollowService: UserFollowService
 
     @Autowired
     lateinit var given: Precondition
@@ -48,19 +48,16 @@ internal class ArticleFavoriteServiceIntegrationTest {
     }
 
     @Test
-    fun `should mark article as favorite and unfavorite`() {
-        val author = given.user.exists()
-        val article = given.article.exist(ArticleGen.build(author))
-        then.article.isNotFavorited(article.slug)
+    fun `should follow and unfollow user`() {
+        val user = given.user.exists()
+        then.user.isNotFollowed(user.username)
 
-        articleFavoriteService.favorite(article.slug)
+        userFollowService.follow(user.username)
 
-        then.article.isFavorited(article.slug)
-        then.article.hasFavoriteCount(article.slug, 1)
+        then.user.isFollowed(user.username)
 
-        articleFavoriteService.unfavorite(article.slug)
+        userFollowService.unfollow(user.username)
 
-        then.article.isNotFavorited(article.slug)
-        then.article.hasFavoriteCount(article.slug, 0)
+        then.user.isNotFollowed(user.username)
     }
 }

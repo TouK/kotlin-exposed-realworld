@@ -8,6 +8,6 @@ interface ArticleFavoriteReadRepository {
 }
 
 interface ArticleFavoriteWriteRepository {
-    fun addFor(articleId: ArticleId, userId: UserId)
-    fun removeFor(articleId: ArticleId, userId: UserId)
+    fun create(articleId: ArticleId, userId: UserId)
+    fun delete(articleId: ArticleId, userId: UserId)
 }

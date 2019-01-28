@@ -51,11 +51,11 @@ internal class SqlArticleFavoriteRepositoryTest {
         val article = articleWriteRepository.create(ArticleGen.build(author))
         val user = given.user.exists()
 
-        articleFavoriteWriteRepository.addFor(article.id, user.id)
+        articleFavoriteWriteRepository.create(article.id, user.id)
 
         assertThat(articleFavoriteReadRepository.findBy(article.id)).containsExactly(user.id)
 
-        articleFavoriteWriteRepository.removeFor(article.id, user.id)
+        articleFavoriteWriteRepository.delete(article.id, user.id)
 
         assertThat(articleFavoriteReadRepository.findBy(article.id)).isEmpty()
     }

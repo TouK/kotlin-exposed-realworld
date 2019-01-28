@@ -26,7 +26,7 @@ create table article_favorites (
 
 create table follows (
   user_id bigint not null references users(id),
-  followed_user_id bigint not null references users(id)
+  follower_id bigint not null references users(id)
 );
 
 create table tags (
