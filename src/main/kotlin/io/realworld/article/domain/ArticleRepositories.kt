@@ -8,7 +8,7 @@ interface ArticleReadRepository {
     fun findBy(articleId: ArticleId): Article?
     fun findBy(slug: Slug): Article?
 
-    fun getBy(slug: Slug) = findBy(slug) ?: throw ArticleNotFoundException(slug.toString())
+    fun getBy(slug: Slug) = findBy(slug) ?: throw ArticleNotFoundException(slug)
 }
 
 interface ArticleWriteRepository {
@@ -17,4 +17,4 @@ interface ArticleWriteRepository {
     fun delete(articleId: ArticleId)
 }
 
-class ArticleNotFoundException(slug: String) : ApplicationException("Article for slug $slug not found")
+class ArticleNotFoundException(slug: Slug) : ApplicationException("Article for slug ${slug.value} not found")

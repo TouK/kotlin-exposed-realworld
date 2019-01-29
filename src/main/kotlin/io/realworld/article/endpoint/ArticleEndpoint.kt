@@ -35,7 +35,7 @@ class ArticleEndpoint(
 
     @GetMapping("/{$SLUG_PARAM}")
     fun get(@PathVariable(name = SLUG_PARAM, required = true) slug: Slug) =
-            ArticleResponse(articleQueryService.findBy(slug).let(articleConverter::toDto))
+            ArticleResponse(articleQueryService.getBy(slug).let(articleConverter::toDto))
 
     @PostMapping
     fun create(@Valid @RequestBody request: CreateArticleRequest) =

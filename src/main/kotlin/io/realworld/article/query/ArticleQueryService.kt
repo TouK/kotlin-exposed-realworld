@@ -14,7 +14,7 @@ class ArticleQueryService(
         private val tagReadRepository: TagReadRepository
 ) {
 
-    fun findBy(slug: Slug) = articleReadRepository.getBy(slug)
+    fun getBy(slug: Slug) = articleReadRepository.getBy(slug)
 
     fun findAll() = articleReadRepository.findAll()
 
