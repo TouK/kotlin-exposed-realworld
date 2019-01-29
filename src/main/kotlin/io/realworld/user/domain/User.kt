@@ -1,6 +1,5 @@
 package io.realworld.user.domain
 
-import com.fasterxml.jackson.annotation.JsonValue
 import io.realworld.shared.refs.UserId
 
 data class User(
@@ -16,5 +15,5 @@ typealias Author = User
 typealias LoggedUser = User
 
 data class Username(
-        @get:JsonValue val value: String
+        val value: String
 )
