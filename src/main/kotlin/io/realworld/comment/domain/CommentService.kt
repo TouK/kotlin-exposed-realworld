@@ -17,7 +17,7 @@ class CommentService(
         private val loggedUserService: LoggedUserService
 ) {
     fun create(slug: Slug, createCommentDto: CreateCommentDto): Comment {
-        val article = articleQueryService.findBy(slug)
+        val article = articleQueryService.getBy(slug)
         return commentWriteRepository.create(Comment(
                 articleId = article.id,
                 body = createCommentDto.body,

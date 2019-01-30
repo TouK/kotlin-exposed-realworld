@@ -37,5 +37,5 @@ class ArticleExpectation(
         assertThat(getBy(slug).favoritesCount).isEqualTo(count)
     }
 
-    private fun getBy(slug: Slug) = articleQueryService.findBy(slug).let(articleConverter::toDto)
+    private fun getBy(slug: Slug) = articleQueryService.getBy(slug).let(articleConverter::toDto)
 }

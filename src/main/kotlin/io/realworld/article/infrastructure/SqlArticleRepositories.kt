@@ -7,7 +7,6 @@ import io.realworld.article.domain.Slug
 import io.realworld.article.domain.TagId
 import io.realworld.shared.infrastructure.getOrThrow
 import io.realworld.shared.infrastructure.longWrapper
-import io.realworld.shared.infrastructure.selectSingleOrNull
 import io.realworld.shared.infrastructure.stringWrapper
 import io.realworld.shared.infrastructure.updateExactlyOne
 import io.realworld.shared.infrastructure.zonedDateTime
@@ -42,19 +41,26 @@ object ArticleTagTable : Table("article_tags") {
 @Component
 class SqlArticleReadRepository : ArticleReadRepository {
 
+    companion object {
+        val ArticleWithTags = (ArticleTable leftJoin ArticleTagTable leftJoin TagTable)
+    }
+
     override fun findAll() =
-            (ArticleTable innerJoin ArticleTagTable innerJoin TagTable)
+            ArticleWithTags
                     .selectAll()
-                    .map { it.toArticle() }
+                    .toArticles()
 
     override fun findBy(articleId: ArticleId) =
-            (ArticleTable innerJoin ArticleTagTable innerJoin TagTable)
+            ArticleWithTags
                     .select { ArticleTable.id eq articleId }
-                    .toArticle()
+                    .toArticles()
+                    .singleOrNull()
 
     override fun findBy(slug: Slug) =
-            ArticleTable
-                    .selectSingleOrNull { ArticleTable.slug eq slug }?.toArticle()
+            ArticleWithTags
+                    .select { ArticleTable.slug eq slug }
+                    .toArticles()
+                    .singleOrNull()
 }
 
 @Component
@@ -83,9 +89,16 @@ class SqlArticleWriteRepository : ArticleWriteRepository {
     }
 }
 
-fun Iterable<ResultRow>.toArticle() = this.fold(this.first().toArticle()) { article, resultRow ->
-        article.copy(tags = article.tags + resultRow.toTag())
-    }
+fun Iterable<ResultRow>.toArticles(): List<Article> {
+    return fold(mutableMapOf<ArticleId, Article>()) { map, resultRow ->
+        val article = resultRow.toArticle()
+        val tagId = resultRow.tryGet(ArticleTagTable.tagId)
+        val tag = tagId?.let { resultRow.toTag() }
+        val current = map.getOrDefault(article.id, article)
+        map[article.id] = current.copy(tags = current.tags + listOfNotNull(tag))
+        map
+    }.values.toList()
+}
 
 fun ResultRow.toArticle() = Article(
         id = this[ArticleTable.id],

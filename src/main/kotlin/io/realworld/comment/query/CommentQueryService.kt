@@ -16,7 +16,7 @@ class CommentQueryService(
 ) {
 
     fun findAllBy(slug: Slug): List<Comment> {
-        val article = articleQueryService.findBy(slug)
+        val article = articleQueryService.getBy(slug)
         return commentReadRepository.findAllBy(article.id)
     }
 
