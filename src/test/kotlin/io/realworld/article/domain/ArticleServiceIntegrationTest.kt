@@ -11,6 +11,7 @@ import io.realworld.test.precondition.Precondition
 import io.realworld.test.precondition.PreconditionConfiguration
 import io.realworld.user.domain.LoggedUser
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -93,5 +94,14 @@ internal class ArticleServiceIntegrationTest {
         articleService.delete(article.slug)
 
         then.article.notExistsFor(article.slug)
+    }
+
+    @Test
+    fun `should throw on duplicate title`() {
+        val article = given.article.exist(ArticleGen.build(author = loggedUser))
+
+        assertThatThrownBy {
+            articleService.create(CreateArticleDtoGen.build().copy(title = article.title))
+        }.isInstanceOf(DuplicateArticleException::class.java)
     }
 }

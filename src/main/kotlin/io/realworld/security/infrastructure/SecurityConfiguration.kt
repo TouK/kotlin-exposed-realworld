@@ -1,8 +1,8 @@
 package io.realworld.security.infrastructure
 
 import io.realworld.security.domain.JwtService
-import io.realworld.user.domain.UserReadRepository
 import io.realworld.user.infrastructure.UserConfiguration
+import io.realworld.user.query.UserQueryService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
@@ -24,14 +23,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @ComponentScan(basePackages = ["io.realworld.security"])
 @EnableWebSecurity
 @Import(UserConfiguration::class)
-class SecurityConfiguration(private val userReadRepository: UserReadRepository,
+class SecurityConfiguration(private val userQueryService: UserQueryService,
                             private val jwtService: JwtService) : WebSecurityConfigurerAdapter() {
 
     @Bean
-    fun jwtTokenFilter() = JwtTokenFilter(userReadRepository, jwtService)
-
-    @Bean
-    fun passwordEncoder() = BCryptPasswordEncoder()
+    fun jwtTokenFilter() = JwtTokenFilter(userQueryService, jwtService)
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {

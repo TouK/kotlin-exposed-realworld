@@ -4,6 +4,8 @@ import io.realworld.article.endpoint.CreateArticleDto
 import io.realworld.article.endpoint.UpdateArticleDto
 import io.realworld.comment.domain.CommentService
 import io.realworld.security.domain.LoggedUserService
+import io.realworld.shared.domain.ApplicationException
+import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -24,7 +26,11 @@ class ArticleService(
             Article(title = this.title, description = this.description, authorId = loggedUser.id, tags = tags,
                     body = this.body)
         }
-        return articleWriteRepository.create(article)
+        try {
+            return articleWriteRepository.create(article)
+        } catch (ex: DuplicateKeyException) {
+            throw DuplicateArticleException(article.slug)
+        }
     }
 
     fun update(slug: Slug, updateArticleDto: UpdateArticleDto): Article {
@@ -42,3 +48,5 @@ class ArticleService(
         articleWriteRepository.delete(article.id)
     }
 }
+
+class DuplicateArticleException(slug: Slug) : ApplicationException("Duplicate article for slug ${slug.value}")

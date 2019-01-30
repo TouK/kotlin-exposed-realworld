@@ -1,8 +1,8 @@
 package io.realworld.user.infrastructure
 
+import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.test.precondition.Precondition
 import io.realworld.test.precondition.PreconditionConfiguration
-import io.realworld.shared.TestTransactionConfiguration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -34,12 +34,12 @@ internal class SqlUserReadRepositoryTest {
     lateinit var given: Precondition
 
     @Autowired
-    lateinit var sqlUserRepository: SqlUserReadRepository
+    lateinit var userReadRepository: SqlUserReadRepository
 
     @Test
     fun `should find user by id`() {
         val user = given.user.exists()
 
-        assertThat(sqlUserRepository.findBy(user.id)).isEqualTo(user)
+        assertThat(userReadRepository.findBy(user.id)).isEqualTo(user)
     }
 }

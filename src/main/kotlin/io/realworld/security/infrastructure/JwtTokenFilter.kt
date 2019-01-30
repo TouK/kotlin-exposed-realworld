@@ -2,6 +2,7 @@ package io.realworld.security.infrastructure
 
 import io.realworld.security.domain.JwtService
 import io.realworld.user.domain.UserReadRepository
+import io.realworld.user.query.UserQueryService
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
@@ -11,7 +12,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 class JwtTokenFilter(
-        private val userReadRepository: UserReadRepository,
+        private val userQueryService: UserQueryService,
         private val jwtService: JwtService
 ) : OncePerRequestFilter() {
 
@@ -23,7 +24,7 @@ class JwtTokenFilter(
         getTokenString(request.getHeader(AUTH_HEADER))?.let { token ->
             jwtService.getSubFromToken(token)?.let { id ->
                   if (SecurityContextHolder.getContext().authentication == null) {
-                      userReadRepository.findBy(id)?.let { user ->
+                      userQueryService.findBy(id)?.let { user ->
                           val authenticationToken = UsernamePasswordAuthenticationToken(user, null, emptyList())
                           authenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
                           SecurityContextHolder.getContext().authentication = authenticationToken
