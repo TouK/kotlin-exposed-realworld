@@ -2,10 +2,10 @@ package io.realworld.shared.infrastructure
 
 import kotlin.reflect.KProperty
 
-abstract class GeneratedId<T : Comparable<T>> : Comparable<GeneratedId<T>> {
+abstract class RefId<T : Comparable<T>> : Comparable<RefId<T>> {
     abstract val value: T
 
-    override fun compareTo(other: GeneratedId<T>) = value.compareTo(other.value)
+    override fun compareTo(other: RefId<T>) = value.compareTo(other.value)
 }
 
 class IdNotPersistedDelegate<T> {

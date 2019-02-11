@@ -1,9 +1,9 @@
 package io.realworld.article.domain
 
-import io.realworld.shared.infrastructure.GeneratedId
+import io.realworld.shared.infrastructure.RefId
 import io.realworld.shared.infrastructure.IdNotPersistedDelegate
 
-sealed class TagId : GeneratedId<Long>() {
+sealed class TagId : RefId<Long>() {
     object New : TagId() {
         override val value: Long by IdNotPersistedDelegate<Long>()
     }

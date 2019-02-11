@@ -1,10 +1,10 @@
 package io.realworld.shared.refs
 
 import com.fasterxml.jackson.annotation.JsonValue
-import io.realworld.shared.infrastructure.GeneratedId
+import io.realworld.shared.infrastructure.RefId
 import io.realworld.shared.infrastructure.IdNotPersistedDelegate
 
-sealed class CommentId : GeneratedId<Long>() {
+sealed class CommentId : RefId<Long>() {
     object New : CommentId() {
         override val value: Long by IdNotPersistedDelegate<Long>()
     }
