@@ -5,6 +5,7 @@ Medium clone backend using Kotlin, Spring and [Exposed](https://github.com/JetBr
 
 ## Rationale
 The repository shows how we use Kotlin+Exposed in TouK. 
+More details on [the blog post](https://medium.com/@pjagielski/how-we-use-kotlin-with-exposed-at-touk-eacaae4565b5).
 
 ## Running acceptance test
 
