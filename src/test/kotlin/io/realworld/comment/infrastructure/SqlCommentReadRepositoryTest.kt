@@ -1,7 +1,6 @@
 package io.realworld.comment.infrastructure
 
 import io.realworld.article.domain.ArticleGen
-import io.realworld.article.infrastructure.ArticleConfiguration
 import io.realworld.comment.domain.CommentGen
 import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.test.precondition.Precondition
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional
 @SpringBootTest(
         classes = [
             SqlCommentReadRepository::class,
-            ArticleConfiguration::class,
             PreconditionConfiguration::class,
             TestTransactionConfiguration::class
         ]
@@ -37,7 +35,7 @@ internal class SqlCommentReadRepositoryTest {
     lateinit var given: Precondition
 
     @Autowired
-    lateinit var sqlCommentRepository: SqlCommentReadRepository
+    lateinit var commentReadRepository: SqlCommentReadRepository
 
     @Test
     fun `should load comments for article`() {
@@ -46,6 +44,6 @@ internal class SqlCommentReadRepositoryTest {
         val article = given.article.exist(ArticleGen.build(author))
         val comment = given.comment.exist(CommentGen.build(article = article, author = commenter))
 
-        assertThat(sqlCommentRepository.findAllBy(article.id)).containsExactly(comment)
+        assertThat(commentReadRepository.findAllBy(article.id)).containsExactly(comment)
     }
 }

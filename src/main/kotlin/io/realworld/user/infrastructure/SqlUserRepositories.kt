@@ -28,7 +28,6 @@ object UserTable : Table("users") {
 }
 
 @Component
-@Transactional(readOnly = true)
 class SqlUserReadRepository : UserReadRepository {
 
     override fun findBy(userId: UserId) =

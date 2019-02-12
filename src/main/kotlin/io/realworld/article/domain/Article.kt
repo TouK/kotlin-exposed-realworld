@@ -16,6 +16,8 @@ data class Article(
         val updatedAt: ZonedDateTime = ZonedDateTime.now()
 ) {
     fun withTitle(title: String) = copy(title = title, slug = Slug.fromTitle(title))
+
+    fun addTag(tag: Tag?) = copy(tags = this.tags + listOfNotNull(tag))
 }
 
 data class Slug(

@@ -5,6 +5,7 @@ import io.realworld.article.domain.ArticleReadRepository
 import io.realworld.article.domain.ArticleWriteRepository
 import io.realworld.article.domain.Slug
 import io.realworld.article.domain.TagId
+import io.realworld.shared.infrastructure.DatabaseExceptionTranslator
 import io.realworld.shared.infrastructure.getOrThrow
 import io.realworld.shared.infrastructure.longWrapper
 import io.realworld.shared.infrastructure.stringWrapper
@@ -21,6 +22,7 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
 
 object ArticleTable : Table("articles") {
     val id = articleId("id").primaryKey().autoIncrement()
@@ -63,10 +65,12 @@ class SqlArticleReadRepository : ArticleReadRepository {
                     .singleOrNull()
 }
 
-@Component
-class SqlArticleWriteRepository : ArticleWriteRepository {
+@Repository
+class SqlArticleWriteRepository(
+        private val et: DatabaseExceptionTranslator
+) : ArticleWriteRepository {
 
-    override fun create(article: Article): Article {
+    override fun create(article: Article) = et.translateExceptions {
         val savedArticle = ArticleTable.insert { it.from(article) }
                 .getOrThrow(ArticleTable.id)
                 .let { article.copy(id = it) }
@@ -76,7 +80,7 @@ class SqlArticleWriteRepository : ArticleWriteRepository {
                 it[ArticleTagTable.articleId] = savedArticle.id
             }
         }
-        return savedArticle
+        savedArticle
     }
 
     override fun save(article: Article) {
@@ -94,9 +98,9 @@ fun Iterable<ResultRow>.toArticles(): List<Article> {
         val article = resultRow.toArticle()
         val tagId = resultRow.tryGet(ArticleTagTable.tagId)
         val tag = tagId?.let { resultRow.toTag() }
-        val current = map.getOrDefault(article.id, article)
-        map[article.id] = current.copy(tags = current.tags + listOfNotNull(tag))
-        map
+        map.apply {
+            this[article.id] = map.getOrDefault(article.id, article).addTag(tag)
+        }
     }.values.toList()
 }
 

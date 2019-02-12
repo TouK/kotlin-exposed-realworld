@@ -80,5 +80,4 @@ internal class ArticleServiceTest {
         assertThat(updatedArticle.title).isEqualTo(article.title)
         assertThat(updatedArticle.description).isEqualTo(article.description)
     }
-
 }

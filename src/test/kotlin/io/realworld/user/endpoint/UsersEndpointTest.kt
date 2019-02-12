@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.whenever
-import io.realworld.test.json
 import io.realworld.security.infrastructure.SecurityConfiguration
 import io.realworld.shared.Gen
 import io.realworld.shared.refs.UserId
+import io.realworld.test.json
 import io.realworld.user.domain.UserGen
 import io.realworld.user.domain.UserReadRepository
 import io.realworld.user.infrastructure.UserConfiguration
@@ -53,11 +53,9 @@ class UsersEndpointTest {
         whenever(passwordEncoder.matches(eq(user.password), any())).thenReturn(true)
 
         mvc.perform(
-                post("${UsersEndpoint.PATH}/${UsersEndpoint.LOGIN_PATH}")
-                        .jsonBody(LoginRequest(user = LoginDto(user.email, user.password))))
+                post("${UsersEndpoint.PATH}/${UsersEndpoint.LOGIN_PATH}").jsonBody(LoginRequest(user = LoginDto(user.email, user.password))))
                 .andExpect(status().isOk)
     }
 
     private fun MockHttpServletRequestBuilder.jsonBody(body: Any) = this.json(objectMapper.writeValueAsString(body))
-
 }

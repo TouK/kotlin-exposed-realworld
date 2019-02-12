@@ -1,9 +1,9 @@
 package io.realworld.shared.refs
 
-import io.realworld.shared.infrastructure.GeneratedId
+import io.realworld.shared.infrastructure.RefId
 import io.realworld.shared.infrastructure.IdNotPersistedDelegate
 
-sealed class ArticleId : GeneratedId<Long>() {
+sealed class ArticleId : RefId<Long>() {
     object New : ArticleId() {
         override val value: Long by IdNotPersistedDelegate<Long>()
     }

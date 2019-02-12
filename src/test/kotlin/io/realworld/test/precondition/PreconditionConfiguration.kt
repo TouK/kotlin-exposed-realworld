@@ -3,6 +3,7 @@ package io.realworld.test.precondition
 import io.realworld.article.infrastructure.SqlArticleWriteRepository
 import io.realworld.article.infrastructure.SqlTagWriteRepository
 import io.realworld.comment.infrastructure.SqlCommentWriteRepository
+import io.realworld.shared.infrastructure.DatabaseConfiguration
 import io.realworld.user.infrastructure.SqlUserWriteRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
@@ -14,6 +15,7 @@ import javax.sql.DataSource
 @Configuration
 @ComponentScan("io.realworld.test.precondition")
 @Import(value = [
+    DatabaseConfiguration::class,
     SqlUserWriteRepository::class, SqlArticleWriteRepository::class, SqlCommentWriteRepository::class, SqlTagWriteRepository::class
 ])
 class PreconditionConfiguration(private val dataSource: DataSource) {
