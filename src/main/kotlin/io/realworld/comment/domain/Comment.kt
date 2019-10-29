@@ -27,6 +27,7 @@ data class Comment(
 
         val articleId: ArticleId,
 
+        @Column(length = 400)
         val body: String,
 
         @Convert(value = UserIdConverter::class)

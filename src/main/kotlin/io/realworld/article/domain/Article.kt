@@ -30,6 +30,7 @@ data class Article(
 
         val description: String,
 
+        @Column(length = 1000)
         val body: String,
 
         @Convert(value = UserIdConverter::class)
