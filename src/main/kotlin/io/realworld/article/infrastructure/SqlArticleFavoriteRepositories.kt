@@ -2,10 +2,12 @@ package io.realworld.article.infrastructure
 
 import io.realworld.article.domain.ArticleFavoriteReadRepository
 import io.realworld.article.domain.ArticleFavoriteWriteRepository
+import io.realworld.article.domain.ArticleTable
+import io.realworld.article.domain.article_id
 import io.realworld.shared.refs.ArticleId
 import io.realworld.shared.refs.UserId
-import io.realworld.user.infrastructure.UserTable
-import io.realworld.user.infrastructure.userId
+import io.realworld.user.domain.UserTable
+import io.realworld.user.domain.user_id
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
@@ -14,8 +16,8 @@ import org.jetbrains.exposed.sql.select
 import org.springframework.stereotype.Repository
 
 object ArticleFavoriteTable : Table("article_favorites") {
-    val userId = userId("user_id").references(UserTable.id)
-    val articleId = articleId("article_id").references(ArticleTable.id)
+    val userId = user_id("user_id").references(UserTable.id)
+    val articleId = article_id("article_id").references(ArticleTable.id)
 }
 
 @Repository
