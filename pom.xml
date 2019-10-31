@@ -211,8 +211,17 @@
 
     <repositories>
         <repository>
-            <id>philanthropist-snapshots</id>
+            <id>touk public snapshots</id>
+            <name>touk public snapshots</name>
             <url>https://philanthropist.touk.pl/nexus/content/repositories/snapshots</url>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>touk public snapshots</id>
+            <name>touk public snapshots</name>
+            <url>https://philanthropist.touk.pl/nexus/content/repositories/snapshots</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
