@@ -11,7 +11,7 @@ variables:
   SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/$POSTGRES_DB
   SPRING_DATASOURCE_USERNAME: $POSTGRES_USER
   SPRING_DATASOURCE_PASSWORD: $POSTGRES_PASSWORD
-  MAVEN_OPTS: "-B -Dmaven.repo.local=$MAVEN_USER_HOME"
+  MAVEN_OPTS: "--batch-mode -Dmaven.repo.local=$MAVEN_USER_HOME"
 
 stages:
   - test
