@@ -11,7 +11,8 @@ variables:
   SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/$POSTGRES_DB
   SPRING_DATASOURCE_USERNAME: $POSTGRES_USER
   SPRING_DATASOURCE_PASSWORD: $POSTGRES_PASSWORD
-  MAVEN_OPTS: "--batch-mode -Dmaven.repo.local=$MAVEN_USER_HOME"
+  MAVEN_CLI_OPTS: "--batch-mode --errors --show-version"
+  MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
 
 stages:
   - test
@@ -21,7 +22,6 @@ stages:
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
-  - export MAVEN_USER_HOME=`pwd`/.maven
 
 cache:
   paths:
@@ -43,7 +43,7 @@ test:
   stage: test
   script:
     - ./gradlew check
-    - ./mvnw $MAVEN_OPTS test
+    - ./mvnw $MAVEN_CLI_OPTS test
 
 push_image:
   stage: package
