@@ -27,7 +27,7 @@ cache:
   paths:
     - .gradle/wrapper
     - .gradle/caches
-    - .maven
+    - $CI_PROJECT_DIR/.m2/repository
     - target/
 
 build:
