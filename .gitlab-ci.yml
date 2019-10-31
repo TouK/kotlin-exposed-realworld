@@ -11,8 +11,7 @@ variables:
   SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/$POSTGRES_DB
   SPRING_DATASOURCE_USERNAME: $POSTGRES_USER
   SPRING_DATASOURCE_PASSWORD: $POSTGRES_PASSWORD
-  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MAVEN_OPTS: "-Dmaven.repo.local=$MAVEN_USER_HOME"
 
 stages:
   - test
@@ -22,12 +21,13 @@ stages:
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
+  - export MAVEN_USER_HOME=`pwd`/.maven
 
 cache:
   paths:
     - .gradle/wrapper
     - .gradle/caches
-    - .m2/repository/
+    - .maven
     - target/
 
 build:
@@ -43,7 +43,7 @@ test:
   stage: test
   script:
     - ./gradlew check
-    - ./mvnw $MAVEN_CLI_OPTS test
+    - ./mvnw $MAVEN_OPTS test
 
 push_image:
   stage: package
