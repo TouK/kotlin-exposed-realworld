@@ -24,7 +24,6 @@
         <mockito-kotlin.version>1.6.0</mockito-kotlin.version>
         <java-faker.version>0.16</java-faker.version>
         <postgres.version>42.2.4</postgres.version>
-        <joda-time.version>2.10.2</joda-time.version>
     </properties>
 
     <dependencies>
@@ -47,7 +46,7 @@
         </dependency>
         <dependency>
             <groupId>org.jetbrains.exposed</groupId>
-            <artifactId>exposed-jodatime</artifactId>
+            <artifactId>exposed-java-time</artifactId>
             <version>${exposed.version}</version>
         </dependency>
         <dependency>
@@ -105,11 +104,6 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>${jjwt.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>${joda-time.version}</version>
         </dependency>
 
         <dependency>
