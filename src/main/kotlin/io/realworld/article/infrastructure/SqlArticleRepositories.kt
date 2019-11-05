@@ -56,8 +56,7 @@ class SqlArticleWriteRepository(
                 .let { article.copy(id = it) }
         savedArticle.tags.forEach { tag ->
             ArticleTagsTable.insert {
-                it[ArticleTagsTable.tagId] = tag.id
-                it[ArticleTagsTable.articleId] = savedArticle.id
+                it.from(article = savedArticle, tag = tag)
             }
         }
         savedArticle
