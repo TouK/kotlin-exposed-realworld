@@ -9,7 +9,7 @@ buildscript {
         assertjVersion = '3.11.1'
         mockitoKotlinVersion = '1.6.0'
         javafakerVersion = '0.16'
-        kotlinpoet_version = '1.4.1'
+        exposedGeneratorVersion = '0.1.0-SNAPSHOT'
     }
     repositories {
         mavenCentral()
@@ -60,21 +60,15 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-jdbc')
     compile('org.springframework.data:spring-data-commons')
 
-    api "org.jetbrains.exposed:exposed-jdbc:$exposedVersion"
-    api "org.jetbrains.exposed:exposed-java-time:$exposedVersion"
-    api "org.jetbrains.exposed:exposed-core:$exposedVersion"
     compile("org.jetbrains.exposed:spring-transaction:$exposedVersion")
     compile('org.flywaydb:flyway-core')
     compile('com.fasterxml.jackson.module:jackson-module-kotlin')
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    compile("org.jetbrains.kotlin:kotlin-reflect")
     compile("io.jsonwebtoken:jjwt:$jjwtVersion")
 
-    compile("pl.touk.exposed-generator:annotation-processor:0.1-SNAPSHOT")
+    compile("pl.touk.exposed-generator:runtime:$exposedGeneratorVersion")
+    compile("pl.touk.exposed-generator:annotation-processor:$exposedGeneratorVersion")
     kapt "pl.touk.exposed-generator:annotation-processor:0.1-SNAPSHOT"
-    compile("pl.touk.exposed-generator:runtime:0.1-SNAPSHOT")
-    api "com.squareup:kotlinpoet:$kotlinpoet_version"
-    api "com.squareup:kotlinpoet-metadata:$kotlinpoet_version"
     api 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
 
     runtime("org.postgresql:postgresql:$postgresVersion")
