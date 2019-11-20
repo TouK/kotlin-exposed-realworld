@@ -8,13 +8,12 @@ import io.realworld.article.domain.ArticleWriteRepository
 import io.realworld.article.domain.Slug
 import io.realworld.article.domain.TagTable
 import io.realworld.article.domain.from
+import io.realworld.article.domain.insert
 import io.realworld.article.domain.toArticleList
 import io.realworld.shared.infrastructure.DatabaseExceptionTranslator
-import io.realworld.shared.infrastructure.getOrThrow
 import io.realworld.shared.infrastructure.updateExactlyOne
 import io.realworld.shared.refs.ArticleId
 import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.springframework.stereotype.Component
@@ -51,15 +50,7 @@ class SqlArticleWriteRepository(
 ) : ArticleWriteRepository {
 
     override fun create(article: Article) = et.translateExceptions {
-        val savedArticle = ArticleTable.insert { it.from(article) }
-                .getOrThrow(ArticleTable.id)
-                .let { article.copy(id = it) }
-        savedArticle.tags.forEach { tag ->
-            ArticleTagsTable.insert {
-                it.from(article = savedArticle, tag = tag)
-            }
-        }
-        savedArticle
+        ArticleTable.insert(article)
     }
 
     override fun save(article: Article) {

@@ -68,8 +68,7 @@ dependencies {
 
     compile("pl.touk.exposed-generator:runtime:$exposedGeneratorVersion")
     compile("pl.touk.exposed-generator:annotation-processor:$exposedGeneratorVersion")
-    kapt "pl.touk.exposed-generator:annotation-processor:0.1-SNAPSHOT"
-    api 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
+    kapt "pl.touk.exposed-generator:annotation-processor:$exposedGeneratorVersion"
 
     runtime("org.postgresql:postgresql:$postgresVersion")
 

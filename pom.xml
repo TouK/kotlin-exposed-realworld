@@ -180,16 +180,22 @@
 
     <repositories>
         <repository>
-            <id>touk public snapshots</id>
-            <name>touk public snapshots</name>
+            <id>Exposed BinTray</id>
+            <url>https://dl.bintray.com/kotlin/exposed</url>
+        </repository>
+        <repository>
+            <id>TouK public snapshots</id>
             <url>https://philanthropist.touk.pl/nexus/content/repositories/snapshots</url>
         </repository>
     </repositories>
 
     <pluginRepositories>
         <pluginRepository>
-            <id>touk public snapshots</id>
-            <name>touk public snapshots</name>
+            <id>Exposed BinTray</id>
+            <url>https://dl.bintray.com/kotlin/exposed</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>TouK public snapshots</id>
             <url>https://philanthropist.touk.pl/nexus/content/repositories/snapshots</url>
         </pluginRepository>
     </pluginRepositories>

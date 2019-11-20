@@ -80,8 +80,13 @@ internal class ArticleQueryServiceTest {
         val articleBravo = given.article.exist(ArticleGen.build(author = author, tags = emptyList()))
 
         val articles = articleQueryService.findAll()
+        val (persistedArticleAlpha, persistedArticleBravo) = articles
 
-        assertThat(articles).containsExactlyInAnyOrder(articleAlpha, articleBravo)
+        assertThat(articles).hasSize(2)
+        assertThat(persistedArticleAlpha).isEqualToIgnoringGivenFields(articleAlpha, "tags")
+        assertThat(persistedArticleAlpha.tags).containsAnyElementsOf(articleAlpha.tags)
+        assertThat(persistedArticleBravo).isEqualToIgnoringGivenFields(articleBravo, "tags")
+        assertThat(persistedArticleBravo.tags).isEmpty()
     }
 
     @Test
