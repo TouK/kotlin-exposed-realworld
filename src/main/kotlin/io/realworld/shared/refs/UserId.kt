@@ -1,8 +1,8 @@
 package io.realworld.shared.refs
 
-import io.realworld.shared.infrastructure.RefId
 import io.realworld.shared.infrastructure.IdNotPersistedDelegate
-import pl.touk.exposed.Converter
+import io.realworld.shared.infrastructure.RefId
+import pl.touk.krush.Converter
 
 sealed class UserId : RefId<Long>() {
     object New : UserId() {

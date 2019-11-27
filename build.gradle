@@ -1,15 +1,15 @@
 buildscript {
     ext {
-        kotlinVersion = '1.3.50'
-        springBootVersion = '2.2.0.RELEASE'
-        exposedVersion ='0.17.6-touk-SNAPSHOT'
+        kotlinVersion = '1.3.60'
+        springBootVersion = '2.2.1.RELEASE'
+        exposedVersion ='0.18.1'
         postgresVersion = '42.2.4'
         jjwtVersion = '0.9.0'
         junitVersion = '5.3.1'
         assertjVersion = '3.11.1'
         mockitoKotlinVersion = '1.6.0'
         javafakerVersion = '0.16'
-        exposedGeneratorVersion = '0.1.0-SNAPSHOT'
+        krushVersion = '0.1.0'
     }
     repositories {
         mavenCentral()
@@ -48,9 +48,9 @@ compileTestKotlin {
 repositories {
     jcenter()
     maven { setUrl("https://dl.bintray.com/kotlin/exposed") }
-    maven { url 'https://philanthropist.touk.pl/nexus/content/repositories/snapshots' }
+    maven { setUrl("https://philanthropist.touk.pl/nexus/content/repositories/releases") }
     mavenCentral()
-    maven { url 'https://jitpack.io' }
+    maven { setUrl("https://jitpack.io") }
 }
 
 
@@ -66,9 +66,9 @@ dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     compile("io.jsonwebtoken:jjwt:$jjwtVersion")
 
-    compile("pl.touk.exposed-generator:runtime:$exposedGeneratorVersion")
-    compile("pl.touk.exposed-generator:annotation-processor:$exposedGeneratorVersion")
-    kapt "pl.touk.exposed-generator:annotation-processor:$exposedGeneratorVersion"
+    compile("pl.touk.krush:runtime:$krushVersion")
+    compile("pl.touk.krush:annotation-processor:$krushVersion")
+    kapt "pl.touk.krush:annotation-processor:$krushVersion"
 
     runtime("org.postgresql:postgresql:$postgresVersion")
 

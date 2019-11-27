@@ -2,8 +2,8 @@ package io.realworld.article.domain
 
 import io.realworld.shared.infrastructure.IdNotPersistedDelegate
 import io.realworld.shared.infrastructure.RefId
-import pl.touk.exposed.Convert
-import pl.touk.exposed.Converter
+import pl.touk.krush.Convert
+import pl.touk.krush.Converter
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id

@@ -5,8 +5,8 @@ import io.realworld.shared.refs.ArticleIdConverter
 import io.realworld.shared.refs.CommentId
 import io.realworld.shared.refs.UserId
 import io.realworld.shared.refs.UserIdConverter
-import pl.touk.exposed.Convert
-import pl.touk.exposed.Converter
+import pl.touk.krush.Convert
+import pl.touk.krush.Converter
 import java.time.ZonedDateTime
 import javax.persistence.Column
 import javax.persistence.Entity

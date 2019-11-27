@@ -2,7 +2,7 @@ package io.realworld.shared.refs
 
 import io.realworld.shared.infrastructure.RefId
 import io.realworld.shared.infrastructure.IdNotPersistedDelegate
-import pl.touk.exposed.Converter
+import pl.touk.krush.Converter
 
 sealed class ArticleId : RefId<Long>() {
     object New : ArticleId() {
