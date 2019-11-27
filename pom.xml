@@ -184,7 +184,7 @@
             <url>https://dl.bintray.com/kotlin/exposed</url>
         </repository>
         <repository>
-            <id>TouK public snapshots</id>
+            <id>TouK public releases</id>
             <url>https://philanthropist.touk.pl/nexus/content/repositories/releases</url>
         </repository>
     </repositories>
