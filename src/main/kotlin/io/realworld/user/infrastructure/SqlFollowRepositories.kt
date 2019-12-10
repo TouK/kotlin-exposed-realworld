@@ -3,6 +3,8 @@ package io.realworld.user.infrastructure
 import io.realworld.shared.refs.UserId
 import io.realworld.user.domain.UserFollowReadRepository
 import io.realworld.user.domain.UserFollowWriteRepository
+import io.realworld.user.domain.UserTable
+import io.realworld.user.domain.user_id
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
@@ -12,8 +14,8 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 object FollowTable : Table("follows") {
-    val userId = userId("user_id") references UserTable.id
-    val followerId = userId("follower_id") references UserTable.id
+    val userId = user_id("user_id") references UserTable.id
+    val followerId = user_id("follower_id") references UserTable.id
 }
 
 @Component

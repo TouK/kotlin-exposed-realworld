@@ -1,7 +1,13 @@
 package io.realworld.article.domain
 
-import io.realworld.shared.infrastructure.RefId
 import io.realworld.shared.infrastructure.IdNotPersistedDelegate
+import io.realworld.shared.infrastructure.RefId
+import pl.touk.krush.Convert
+import pl.touk.krush.Converter
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
+import javax.persistence.Table
 
 sealed class TagId : RefId<Long>() {
     object New : TagId() {
@@ -13,7 +19,21 @@ sealed class TagId : RefId<Long>() {
     }
 }
 
+@Entity
+@Table(name = "tags")
 data class Tag(
+        @Id @GeneratedValue
+        @Convert(value = TagIdConverter::class)
         val id: TagId = TagId.New,
         val name: String
 )
+
+class TagIdConverter : Converter<TagId, Long> {
+    override fun convertToDatabaseColumn(attribute: TagId): Long {
+        return attribute.value
+    }
+
+    override fun convertToEntityAttribute(dbData: Long): TagId {
+        return TagId.Persisted(dbData)
+    }
+}
