@@ -9,7 +9,7 @@ buildscript {
         assertjVersion = '3.11.1'
         mockitoKotlinVersion = '1.6.0'
         javafakerVersion = '0.16'
-        krushVersion = '0.1.0'
+        krushVersion = '0.2.0'
     }
     repositories {
         mavenCentral()
@@ -29,7 +29,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'io.realworld'
-version = '0.0.1-SNAPSHOT'
+version = '0.2.0-SNAPSHOT'
 sourceCompatibility = 1.8
 
 compileKotlin {
@@ -91,5 +91,5 @@ test {
 }
 
 bootJar {
-    archiveName = "${project.name}.jar"
+    archiveFileName = "${project.name}.jar"
 }

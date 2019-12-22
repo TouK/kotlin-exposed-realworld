@@ -2,7 +2,7 @@ package io.realworld.shared.refs
 
 import io.realworld.shared.infrastructure.IdNotPersistedDelegate
 import io.realworld.shared.infrastructure.RefId
-import pl.touk.krush.Converter
+import javax.persistence.AttributeConverter
 
 sealed class UserId : RefId<Long>() {
     object New : UserId() {
@@ -14,7 +14,7 @@ sealed class UserId : RefId<Long>() {
     }
 }
 
-class UserIdConverter : Converter<UserId, Long> {
+class UserIdConverter : AttributeConverter<UserId, Long> {
     override fun convertToDatabaseColumn(attribute: UserId): Long {
         return attribute.value
     }
