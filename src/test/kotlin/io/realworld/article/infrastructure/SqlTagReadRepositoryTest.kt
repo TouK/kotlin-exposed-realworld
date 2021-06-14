@@ -28,13 +28,8 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-class SqlTagReadRepositoryTest {
-
-    @Autowired
-    lateinit var tagReadRepository: SqlTagReadRepository
-
-    @Autowired
-    lateinit var given: Precondition
+class SqlTagReadRepositoryTest @Autowired constructor(
+    val tagReadRepository: SqlTagReadRepository, val given: Precondition) {
 
     @BeforeEach
     internal fun setUp() {
