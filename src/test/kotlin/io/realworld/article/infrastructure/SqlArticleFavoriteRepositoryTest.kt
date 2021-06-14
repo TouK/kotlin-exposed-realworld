@@ -31,19 +31,12 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class SqlArticleFavoriteRepositoryTest {
-
-    @Autowired
-    lateinit var given: Precondition
-
-    @Autowired
-    lateinit var articleWriteRepository: ArticleWriteRepository
-
-    @Autowired
-    lateinit var articleFavoriteWriteRepository: ArticleFavoriteWriteRepository
-
-    @Autowired
-    lateinit var articleFavoriteReadRepository: ArticleFavoriteReadRepository
+internal class SqlArticleFavoriteRepositoryTest @Autowired constructor(
+    val articleWriteRepository: ArticleWriteRepository,
+    val articleFavoriteWriteRepository: ArticleFavoriteWriteRepository,
+    val articleFavoriteReadRepository: ArticleFavoriteReadRepository,
+    val given: Precondition,
+) {
 
     @Test
     fun `should favorite and unfavorite article`() {

@@ -35,13 +35,8 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class CommentQueryServiceIntegrationTest {
-
-    @Autowired
-    lateinit var commentQueryService: CommentQueryService
-
-    @Autowired
-    lateinit var given: Precondition
+internal class CommentQueryServiceIntegrationTest
+@Autowired constructor(val commentQueryService: CommentQueryService, val given: Precondition) {
 
     lateinit var loggedUser: LoggedUser
 
@@ -59,13 +54,22 @@ internal class CommentQueryServiceIntegrationTest {
         val commentAlpha = given.comment.exist(CommentGen.build(author = loggedUser, article = article))
         val commentBravo = given.comment.exist(CommentGen.build(author = loggedUser, article = article))
 
-        assertThat(commentQueryService.findAllBy(article.slug)).containsExactlyInAnyOrder(commentAlpha, commentBravo)
+        val foundComments = commentQueryService.findAllBy(article.slug)
+        assertThat(foundComments)
+            .anySatisfy {
+                assertThat(it).isEqualToIgnoringGivenFields(commentAlpha, "createdAt", "updatedAt")
+            }
+            .anySatisfy {
+                assertThat(it).isEqualToIgnoringGivenFields(commentBravo, "createdAt", "updatedAt")
+            }
     }
 
     @Test
     fun `should find comment by id`() {
         val comment = given.comment.exist(CommentGen.build(author = loggedUser, article = article))
 
-        assertThat(commentQueryService.getBy(comment.id)).isEqualTo(comment)
+        val foundComment = commentQueryService.getBy(comment.id)
+        assertThat(foundComment)
+            .isEqualToIgnoringGivenFields(comment, "createdAt", "updatedAt")
     }
 }

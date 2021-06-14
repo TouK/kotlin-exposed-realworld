@@ -35,13 +35,8 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class ArticleQueryServiceTest {
-
-    @Autowired
-    lateinit var articleQueryService: ArticleQueryService
-
-    @Autowired
-    lateinit var given: Precondition
+internal class ArticleQueryServiceTest
+@Autowired constructor(val articleQueryService: ArticleQueryService, val given: Precondition) {
 
     lateinit var tags: List<Tag>
 
@@ -60,7 +55,8 @@ internal class ArticleQueryServiceTest {
 
         val savedArticle = articleQueryService.getBy(article.slug)
 
-        assertThat(savedArticle).isEqualTo(article)
+        assertThat(savedArticle)
+            .isEqualToIgnoringGivenFields(article, "createdAt", "updatedAt")
     }
 
     @Test
@@ -70,7 +66,8 @@ internal class ArticleQueryServiceTest {
 
         val savedArticle = articleQueryService.getBy(article.slug)
 
-        assertThat(savedArticle).isEqualTo(article)
+        assertThat(savedArticle)
+            .isEqualToIgnoringGivenFields(article, "createdAt", "updatedAt")
     }
 
     @Test
@@ -83,9 +80,9 @@ internal class ArticleQueryServiceTest {
         val (persistedArticleAlpha, persistedArticleBravo) = articles
 
         assertThat(articles).hasSize(2)
-        assertThat(persistedArticleAlpha).isEqualToIgnoringGivenFields(articleAlpha, "tags")
+        assertThat(persistedArticleAlpha).isEqualToIgnoringGivenFields(articleAlpha, "tags", "createdAt", "updatedAt")
         assertThat(persistedArticleAlpha.tags).containsAnyElementsOf(articleAlpha.tags)
-        assertThat(persistedArticleBravo).isEqualToIgnoringGivenFields(articleBravo, "tags")
+        assertThat(persistedArticleBravo).isEqualToIgnoringGivenFields(articleBravo, "tags", "createdAt", "updatedAt")
         assertThat(persistedArticleBravo.tags).isEmpty()
     }
 

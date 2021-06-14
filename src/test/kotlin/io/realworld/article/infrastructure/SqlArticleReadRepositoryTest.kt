@@ -1,8 +1,6 @@
 package io.realworld.article.infrastructure
 
 import io.realworld.article.domain.ArticleGen
-import io.realworld.article.domain.TagGen
-import io.realworld.article.domain.TagWriteRepository
 import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.test.precondition.Precondition
 import io.realworld.test.precondition.PreconditionConfiguration
@@ -30,13 +28,8 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class SqlArticleReadRepositoryTest {
-
-    @Autowired
-    lateinit var given: Precondition
-
-    @Autowired
-    lateinit var sqlArticleReadRepository: SqlArticleReadRepository
+internal class SqlArticleReadRepositoryTest
+@Autowired constructor(val sqlArticleReadRepository: SqlArticleReadRepository, val given: Precondition) {
 
     @Test
     fun `should find article by id`() {
@@ -44,6 +37,9 @@ internal class SqlArticleReadRepositoryTest {
         val tag = given.tag.exists()
         val article = given.article.exist(ArticleGen.build(author, listOf(tag)))
 
-        assertThat(sqlArticleReadRepository.findBy(article.id)).isEqualTo(article)
+        val foundArticle = sqlArticleReadRepository.findBy(article.id)
+        // created/updatedAt has different precision
+        assertThat(foundArticle)
+            .isEqualToIgnoringGivenFields(article, "createdAt", "updatedAt")
     }
 }

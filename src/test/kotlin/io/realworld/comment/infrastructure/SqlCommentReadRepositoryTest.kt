@@ -29,13 +29,8 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class SqlCommentReadRepositoryTest {
-
-    @Autowired
-    lateinit var given: Precondition
-
-    @Autowired
-    lateinit var commentReadRepository: SqlCommentReadRepository
+internal class SqlCommentReadRepositoryTest
+@Autowired constructor(val commentReadRepository: SqlCommentReadRepository, val given: Precondition) {
 
     @Test
     fun `should load comments for article`() {
@@ -44,6 +39,10 @@ internal class SqlCommentReadRepositoryTest {
         val article = given.article.exist(ArticleGen.build(author))
         val comment = given.comment.exist(CommentGen.build(article = article, author = commenter))
 
-        assertThat(commentReadRepository.findAllBy(article.id)).containsExactly(comment)
+        val foundComment = commentReadRepository.findAllBy(article.id)
+        assertThat(foundComment)
+            .anySatisfy {
+                assertThat(it).isEqualToIgnoringGivenFields(comment, "createdAt", "updatedAt")
+            }
     }
 }
