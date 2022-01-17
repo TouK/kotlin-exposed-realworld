@@ -10,7 +10,7 @@ The repository shows how we use Kotlin+Exposed in TouK.
 
 * Start Postgres 11 Docker image on port 5434
 ```
-docker run -p 5434:5432 --name realworld -e POSTGRES_USER=realworld -e POSTGRES_DB=realworld -d postgres:11
+docker run -p 5434:5432 --name realworld -e POSTGRES_USER=realworld -e POSTGRES_DB=realworld POSTGRES_PASSWORD=realworld -d postgres:14
 ```
 
 * Run the app

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.validation.Valid
 
 @RestController
 @RequestMapping("${ArticleEndpoint.PATH}/{${ArticleEndpoint.SLUG_PARAM}}/${CommentEndpoint.COMMENTS_PATH}")
@@ -28,7 +27,7 @@ class CommentEndpoint(
     }
 
     @GetMapping("/{$COMMENT_ID_PARAM}")
-    fun get(@PathVariable(name = CommentEndpoint.COMMENT_ID_PARAM, required = true) commentId: CommentId) =
+    fun get(@PathVariable(name = COMMENT_ID_PARAM, required = true) commentId: CommentId) =
             CommentResponse(commentQueryService.getBy(commentId).let(commentConverter::toDto))
 
     @GetMapping
@@ -37,11 +36,11 @@ class CommentEndpoint(
 
     @PostMapping
     fun create(@PathVariable(name = ArticleEndpoint.SLUG_PARAM, required = true) slug: Slug,
-               @Valid @RequestBody request: CreateCommentRequest) =
+               @RequestBody request: CreateCommentRequest) =
             CommentResponse(commentService.create(slug, request.comment).let(commentConverter::toDto))
 
     @DeleteMapping("/{$COMMENT_ID_PARAM}")
-    fun delete(@PathVariable(name = CommentEndpoint.COMMENT_ID_PARAM, required = true) commentId: CommentId) {
+    fun delete(@PathVariable(name = COMMENT_ID_PARAM, required = true) commentId: CommentId) {
         commentService.delete(commentId)
     }
 }

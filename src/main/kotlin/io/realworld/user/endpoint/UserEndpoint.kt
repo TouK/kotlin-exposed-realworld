@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.validation.Valid
 
 @RestController
 @RequestMapping(UserEndpoint.PATH)
@@ -24,7 +23,7 @@ class UserEndpoint(
     fun current() = UserResponse(loggedUserService.loggedUser()?.toDto())
 
     @PutMapping
-    fun update(@Valid @RequestBody user: UpdateDto) = UserResponse(
+    fun update(@RequestBody user: UpdateDto) = UserResponse(
             userUpdateService.update(loggedUserService.loggedUserOrThrow(), user).toDto()
     )
 }

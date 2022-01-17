@@ -40,6 +40,7 @@ internal class SqlArticleReadRepositoryTest
         val foundArticle = sqlArticleReadRepository.findBy(article.id)
         // created/updatedAt has different precision
         assertThat(foundArticle)
-            .isEqualToIgnoringGivenFields(article, "createdAt", "updatedAt")
+            .usingRecursiveComparison().ignoringFields("createdAt", "updatedAt")
+            .isEqualTo(article)
     }
 }

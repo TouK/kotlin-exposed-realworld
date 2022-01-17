@@ -11,13 +11,13 @@ jobs:
       TERM: dumb
 
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/openjdk:11-jdk
         environment:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/realworld
           SPRING_DATASOURCE_USERNAME: realworld
           SPRING_DATASOURCE_PASSWORD: realworld
 
-      - image: circleci/postgres:11-alpine
+      - image: circleci/postgres:14-alpine
         environment:
           POSTGRES_DB: realworld
           POSTGRES_USER: realworld
@@ -49,7 +49,7 @@ jobs:
       - run:
           name: Install docker-compose and envsubst
           command: |
-            curl -L https://github.com/docker/compose/releases/download/1.23.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+            curl -L https://github.com/docker/compose/releases/download/1.27.4/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
             chmod +x ~/docker-compose
             sudo mv ~/docker-compose /usr/local/bin/docker-compose
             sudo apt-get update && sudo apt-get install -y gettext-base

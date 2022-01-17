@@ -56,12 +56,8 @@ internal class CommentQueryServiceIntegrationTest
 
         val foundComments = commentQueryService.findAllBy(article.slug)
         assertThat(foundComments)
-            .anySatisfy {
-                assertThat(it).isEqualToIgnoringGivenFields(commentAlpha, "createdAt", "updatedAt")
-            }
-            .anySatisfy {
-                assertThat(it).isEqualToIgnoringGivenFields(commentBravo, "createdAt", "updatedAt")
-            }
+            .usingRecursiveFieldByFieldElementComparatorIgnoringFields("createdAt", "updatedAt")
+            .containsOnly(commentAlpha, commentBravo)
     }
 
     @Test
@@ -70,6 +66,7 @@ internal class CommentQueryServiceIntegrationTest
 
         val foundComment = commentQueryService.getBy(comment.id)
         assertThat(foundComment)
-            .isEqualToIgnoringGivenFields(comment, "createdAt", "updatedAt")
+            .usingRecursiveComparison().ignoringFields("createdAt", "updatedAt")
+            .isEqualTo(comment)
     }
 }

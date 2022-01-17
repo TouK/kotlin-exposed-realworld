@@ -67,7 +67,8 @@ internal class ArticleQueryServiceTest
         val savedArticle = articleQueryService.getBy(article.slug)
 
         assertThat(savedArticle)
-            .isEqualToIgnoringGivenFields(article, "createdAt", "updatedAt")
+            .usingRecursiveComparison().ignoringFields("createdAt", "updatedAt")
+            .isEqualTo(article)
     }
 
     @Test
@@ -80,9 +81,13 @@ internal class ArticleQueryServiceTest
         val (persistedArticleAlpha, persistedArticleBravo) = articles
 
         assertThat(articles).hasSize(2)
-        assertThat(persistedArticleAlpha).isEqualToIgnoringGivenFields(articleAlpha, "tags", "createdAt", "updatedAt")
+        assertThat(persistedArticleAlpha)
+            .usingRecursiveComparison().ignoringFields("tags", "createdAt", "updatedAt")
+            .isEqualTo(articleAlpha)
         assertThat(persistedArticleAlpha.tags).containsAnyElementsOf(articleAlpha.tags)
-        assertThat(persistedArticleBravo).isEqualToIgnoringGivenFields(articleBravo, "tags", "createdAt", "updatedAt")
+        assertThat(persistedArticleBravo)
+            .usingRecursiveComparison().ignoringFields("tags", "createdAt", "updatedAt")
+            .isEqualTo(articleBravo)
         assertThat(persistedArticleBravo.tags).isEmpty()
     }
 

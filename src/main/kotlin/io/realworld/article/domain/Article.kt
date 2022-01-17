@@ -54,7 +54,7 @@ data class Slug(
         val value: String
 ) {
     companion object {
-        fun fromTitle(title: String) = Slug(title.toLowerCase().replace(Regex("\\W+"), "-"))
+        fun fromTitle(title: String) = Slug(title.lowercase().replace(Regex("\\W+"), "-"))
     }
 }
 

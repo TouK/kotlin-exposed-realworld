@@ -2,7 +2,7 @@ version: '3'
 services:
 
   db:
-    image: postgres:11
+    image: postgres:14
     environment:
       POSTGRES_DB: realworld
       POSTGRES_USER: realworld

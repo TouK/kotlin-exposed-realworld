@@ -30,7 +30,7 @@ class DatabaseExceptionTranslator(dataSource: DataSource) {
         try {
             return body.invoke()
         } catch (e: SQLException) {
-            throw exceptionTranslator.translate("Exposed", null, e)
+            throw exceptionTranslator.translate("Exposed", null, e) ?: e
         }
     }
 }

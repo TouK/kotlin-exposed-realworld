@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.validation.Valid
 
 @RestController
 @RequestMapping(ArticleEndpoint.PATH)
@@ -38,11 +37,11 @@ class ArticleEndpoint(
             ArticleResponse(articleQueryService.getBy(slug).let(articleConverter::toDto))
 
     @PostMapping
-    fun create(@Valid @RequestBody request: CreateArticleRequest) =
+    fun create(@RequestBody request: CreateArticleRequest) =
             ArticleResponse(articleService.create(request.article).let(articleConverter::toDto))
 
     @PutMapping("/{$SLUG_PARAM}")
-    fun update(@PathVariable(name = SLUG_PARAM, required = true) slug: Slug, @Valid @RequestBody request: UpdateArticleRequest) =
+    fun update(@PathVariable(name = SLUG_PARAM, required = true) slug: Slug, @RequestBody request: UpdateArticleRequest) =
             ArticleResponse(articleService.update(slug, request.article).let(articleConverter::toDto))
 
     @DeleteMapping("/{$SLUG_PARAM}")

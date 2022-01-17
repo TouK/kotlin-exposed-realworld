@@ -39,10 +39,9 @@ internal class SqlCommentReadRepositoryTest
         val article = given.article.exist(ArticleGen.build(author))
         val comment = given.comment.exist(CommentGen.build(article = article, author = commenter))
 
-        val foundComment = commentReadRepository.findAllBy(article.id)
-        assertThat(foundComment)
-            .anySatisfy {
-                assertThat(it).isEqualToIgnoringGivenFields(comment, "createdAt", "updatedAt")
-            }
+        val foundComments = commentReadRepository.findAllBy(article.id)
+        assertThat(foundComments)
+            .usingRecursiveFieldByFieldElementComparatorIgnoringFields("createdAt", "updatedAt")
+            .contains(comment)
     }
 }
