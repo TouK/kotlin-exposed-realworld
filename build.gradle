@@ -1,7 +1,7 @@
 buildscript {
     ext {
         kotlinVersion = '1.6.10'
-        springBootVersion = '2.6.2'
+        springBootVersion = '2.5.8'
         exposedVersion ='0.37.2'
         postgresVersion = '42.3.1'
         jjwtVersion = '0.9.1'
@@ -72,13 +72,13 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql:$postgresVersion")
 
     testImplementation("org.assertj:assertj-core:$assertjVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
     testImplementation("com.nhaarman:mockito-kotlin:$mockitoKotlinVersion")
     testImplementation("com.github.javafaker:javafaker:$javafakerVersion")
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.jupiter', module: 'junit-jupiter'
+    }
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
     testImplementation('org.springframework.security:spring-security-test')
 }
 

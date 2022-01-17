@@ -56,7 +56,8 @@ internal class ArticleQueryServiceTest
         val savedArticle = articleQueryService.getBy(article.slug)
 
         assertThat(savedArticle)
-            .isEqualToIgnoringGivenFields(article, "createdAt", "updatedAt")
+            .usingRecursiveComparison().ignoringFields("createdAt", "updatedAt")
+            .isEqualTo(article)
     }
 
     @Test
