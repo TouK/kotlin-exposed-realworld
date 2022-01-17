@@ -17,7 +17,7 @@ jobs:
           SPRING_DATASOURCE_USERNAME: realworld
           SPRING_DATASOURCE_PASSWORD: realworld
 
-      - image: circleci/postgres:14-alpine
+      - image: circleci/postgres:11-alpine
         environment:
           POSTGRES_DB: realworld
           POSTGRES_USER: realworld
