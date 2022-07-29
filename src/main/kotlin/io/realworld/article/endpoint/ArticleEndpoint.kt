@@ -1,5 +1,6 @@
 package io.realworld.article.endpoint
 
+import io.realworld.article.domain.ArticleFavoriteService
 import io.realworld.article.domain.ArticleService
 import io.realworld.article.domain.Slug
 import io.realworld.article.query.ArticleQueryService
@@ -15,15 +16,17 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(ArticleEndpoint.PATH)
 class ArticleEndpoint(
-        private val articleQueryService: ArticleQueryService,
-        private val articleService: ArticleService,
-        private val articleConverter: ArticleConverter
+    private val articleQueryService: ArticleQueryService,
+    private val articleService: ArticleService,
+    private val articleFavoriteService: ArticleFavoriteService,
+    private val articleConverter: ArticleConverter
 ) {
 
     companion object {
         const val PATH = "/articles"
         const val SLUG_PARAM = "slug"
         const val FEED_PATH = "/feed"
+        const val FAVORITE_PATH = "favorite"
     }
 
     @GetMapping
@@ -48,4 +51,13 @@ class ArticleEndpoint(
     fun delete(@PathVariable(name = SLUG_PARAM, required = true) slug: Slug) {
         articleService.delete(slug)
     }
+
+    @PostMapping("/{$SLUG_PARAM}/${FAVORITE_PATH}")
+    fun favorite(@PathVariable(name = SLUG_PARAM, required = true) slug: Slug) =
+        ArticleResponse(articleFavoriteService.favorite(slug).let(articleConverter::toDto))
+
+    @DeleteMapping("/{$SLUG_PARAM}/${FAVORITE_PATH}")
+    fun unfavorite(@PathVariable(name = SLUG_PARAM, required = true) slug: Slug) =
+        ArticleResponse(articleFavoriteService.unfavorite(slug).let(articleConverter::toDto))
+
 }

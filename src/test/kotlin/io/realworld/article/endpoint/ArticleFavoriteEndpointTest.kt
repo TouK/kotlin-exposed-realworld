@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(
-        ArticleFavoriteEndpoint::class, ArticleConfiguration::class, PreconditionConfiguration::class,
+        ArticleEndpoint::class, ArticleConfiguration::class, PreconditionConfiguration::class,
         WebConfiguration::class, SecurityConfiguration::class, DatabaseConfiguration::class
 )
 @ImportAutoConfiguration(
@@ -68,7 +68,7 @@ class ArticleFavoriteEndpointTest {
         whenever(articleFavoriteService.favorite(article.slug)).thenReturn(article)
 
         mvc.perform(
-                post("${ArticleEndpoint.PATH}/${article.slug.value}/${ArticleFavoriteEndpoint.FAVORITE_PATH}")
+                post("${ArticleEndpoint.PATH}/${article.slug.value}/${ArticleEndpoint.FAVORITE_PATH}")
                     .json("")
         ).andExpect(status().isOk)
     }
