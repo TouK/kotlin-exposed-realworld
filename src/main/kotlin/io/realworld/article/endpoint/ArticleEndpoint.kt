@@ -51,13 +51,4 @@ class ArticleEndpoint(
     fun delete(@PathVariable(name = SLUG_PARAM, required = true) slug: Slug) {
         articleService.delete(slug)
     }
-
-    @PostMapping("/{$SLUG_PARAM}/${FAVORITE_PATH}")
-    fun favorite(@PathVariable(name = SLUG_PARAM, required = true) slug: Slug) =
-        ArticleResponse(articleFavoriteService.favorite(slug).let(articleConverter::toDto))
-
-    @DeleteMapping("/{$SLUG_PARAM}/${FAVORITE_PATH}")
-    fun unfavorite(@PathVariable(name = SLUG_PARAM, required = true) slug: Slug) =
-        ArticleResponse(articleFavoriteService.unfavorite(slug).let(articleConverter::toDto))
-
 }

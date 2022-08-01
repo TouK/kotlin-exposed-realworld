@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(
-        ArticleEndpoint::class, ArticleConfiguration::class, PreconditionConfiguration::class,
+        ArticleFavoriteEndpoint::class, ArticleConfiguration::class, PreconditionConfiguration::class,
         WebConfiguration::class, SecurityConfiguration::class, DatabaseConfiguration::class
 )
 @ImportAutoConfiguration(

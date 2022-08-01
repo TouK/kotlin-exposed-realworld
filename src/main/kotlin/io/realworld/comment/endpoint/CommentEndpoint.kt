@@ -22,7 +22,7 @@ class CommentEndpoint(
 ) {
 
     companion object {
-        const val COMMENTS_PATH = "/comments"
+        const val COMMENTS_PATH = "comments"
         const val COMMENT_ID_PARAM = "commentId"
     }
 

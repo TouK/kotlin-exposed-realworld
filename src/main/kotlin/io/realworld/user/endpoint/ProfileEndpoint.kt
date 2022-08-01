@@ -21,7 +21,7 @@ class ProfileEndpoint(
     companion object {
         const val PATH = "/profiles"
         const val USERNAME_PARAM = "username"
-        const val FOLLOW_PATH = "/follow"
+        const val FOLLOW_PATH = "follow"
     }
 
     @GetMapping("{$USERNAME_PARAM}")
