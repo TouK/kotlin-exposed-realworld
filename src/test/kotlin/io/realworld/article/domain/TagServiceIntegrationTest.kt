@@ -1,6 +1,7 @@
 package io.realworld.article.domain
 
 import io.realworld.article.infrastructure.ArticleConfiguration
+import io.realworld.shared.BaseDatabaseTest
 import io.realworld.test.precondition.Precondition
 import io.realworld.test.precondition.PreconditionConfiguration
 import io.realworld.shared.TestTransactionConfiguration
@@ -28,16 +29,9 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class TagServiceIntegrationTest {
-
-    @Autowired
-    lateinit var given: Precondition
-
-    @Autowired
-    lateinit var tagReadRepository: TagReadRepository
-
-    @Autowired
-    lateinit var tagService: TagService
+internal class TagServiceIntegrationTest @Autowired constructor(
+    val tagService: TagService, val tagReadRepository: TagReadRepository, val given: Precondition
+): BaseDatabaseTest() {
 
     @Test
     fun `should store or find tags`() {

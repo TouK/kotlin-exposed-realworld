@@ -1,6 +1,7 @@
 package io.realworld.article.infrastructure
 
 import io.realworld.article.domain.ArticleGen
+import io.realworld.shared.BaseDatabaseTest
 import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.test.precondition.Precondition
 import io.realworld.test.precondition.PreconditionConfiguration
@@ -28,8 +29,9 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class SqlArticleReadRepositoryTest
-@Autowired constructor(val sqlArticleReadRepository: SqlArticleReadRepository, val given: Precondition) {
+internal class SqlArticleReadRepositoryTest @Autowired constructor(
+    val sqlArticleReadRepository: SqlArticleReadRepository, val given: Precondition
+) : BaseDatabaseTest() {
 
     @Test
     fun `should find article by id`() {

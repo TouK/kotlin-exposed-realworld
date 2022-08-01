@@ -4,6 +4,7 @@ import io.realworld.article.domain.ArticleFavoriteReadRepository
 import io.realworld.article.domain.ArticleFavoriteWriteRepository
 import io.realworld.article.domain.ArticleGen
 import io.realworld.article.domain.ArticleWriteRepository
+import io.realworld.shared.BaseDatabaseTest
 import io.realworld.test.precondition.Precondition
 import io.realworld.test.precondition.PreconditionConfiguration
 import io.realworld.shared.TestTransactionConfiguration
@@ -35,8 +36,8 @@ internal class SqlArticleFavoriteRepositoryTest @Autowired constructor(
     val articleWriteRepository: ArticleWriteRepository,
     val articleFavoriteWriteRepository: ArticleFavoriteWriteRepository,
     val articleFavoriteReadRepository: ArticleFavoriteReadRepository,
-    val given: Precondition,
-) {
+    val given: Precondition
+) : BaseDatabaseTest() {
 
     @Test
     fun `should favorite and unfavorite article`() {

@@ -5,6 +5,7 @@ import io.realworld.article.domain.ArticleNotFoundException
 import io.realworld.article.domain.Slug
 import io.realworld.article.domain.Tag
 import io.realworld.article.infrastructure.ArticleConfiguration
+import io.realworld.shared.BaseDatabaseTest
 import io.realworld.shared.Gen
 import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.test.precondition.Precondition
@@ -35,8 +36,9 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class ArticleQueryServiceTest
-@Autowired constructor(val articleQueryService: ArticleQueryService, val given: Precondition) {
+internal class ArticleQueryServiceTest @Autowired constructor(
+    val articleQueryService: ArticleQueryService, val given: Precondition
+) : BaseDatabaseTest() {
 
     lateinit var tags: List<Tag>
 

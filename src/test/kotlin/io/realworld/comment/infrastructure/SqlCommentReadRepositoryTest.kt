@@ -2,6 +2,7 @@ package io.realworld.comment.infrastructure
 
 import io.realworld.article.domain.ArticleGen
 import io.realworld.comment.domain.CommentGen
+import io.realworld.shared.BaseDatabaseTest
 import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.test.precondition.Precondition
 import io.realworld.test.precondition.PreconditionConfiguration
@@ -29,8 +30,9 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class SqlCommentReadRepositoryTest
-@Autowired constructor(val commentReadRepository: SqlCommentReadRepository, val given: Precondition) {
+internal class SqlCommentReadRepositoryTest @Autowired constructor(
+    val commentReadRepository: SqlCommentReadRepository, val given: Precondition
+) : BaseDatabaseTest() {
 
     @Test
     fun `should load comments for article`() {

@@ -4,6 +4,7 @@ import io.realworld.article.domain.Article
 import io.realworld.article.domain.ArticleGen
 import io.realworld.comment.endpoint.CreateCommentDto
 import io.realworld.comment.infrastructure.CommentConfiguration
+import io.realworld.shared.BaseDatabaseTest
 import io.realworld.shared.Gen
 import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.test.expectation.Expectation
@@ -37,16 +38,9 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class CommentServiceIntegrationTest {
-
-    @Autowired
-    lateinit var commentService: CommentService
-
-    @Autowired
-    lateinit var given: Precondition
-
-    @Autowired
-    lateinit var then: Expectation
+internal class CommentServiceIntegrationTest @Autowired constructor(
+    val commentService: CommentService, val given: Precondition, val then: Expectation
+): BaseDatabaseTest() {
 
     lateinit var loggedUser: LoggedUser
 

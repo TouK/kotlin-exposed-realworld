@@ -1,6 +1,7 @@
 package io.realworld.article.domain
 
 import io.realworld.article.infrastructure.ArticleConfiguration
+import io.realworld.shared.BaseDatabaseTest
 import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.test.expectation.Expectation
 import io.realworld.test.expectation.ExpectationConfiguration
@@ -31,16 +32,9 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class ArticleFavoriteServiceIntegrationTest {
-
-    @Autowired
-    lateinit var articleFavoriteService: ArticleFavoriteService
-
-    @Autowired
-    lateinit var given: Precondition
-
-    @Autowired
-    lateinit var then: Expectation
+internal class ArticleFavoriteServiceIntegrationTest @Autowired constructor(
+    val articleFavoriteService: ArticleFavoriteService, val given: Precondition, val then: Expectation
+): BaseDatabaseTest() {
 
     @BeforeEach
     internal fun setUp() {

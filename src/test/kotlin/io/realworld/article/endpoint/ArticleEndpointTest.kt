@@ -8,6 +8,7 @@ import io.realworld.article.domain.DuplicateArticleException
 import io.realworld.article.domain.Slug
 import io.realworld.article.infrastructure.ArticleConfiguration
 import io.realworld.security.infrastructure.SecurityConfiguration
+import io.realworld.shared.BaseDatabaseTest
 import io.realworld.shared.infrastructure.DatabaseConfiguration
 import io.realworld.shared.infrastructure.WebConfiguration
 import io.realworld.test.json
@@ -41,7 +42,7 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-class ArticleEndpointTest {
+class ArticleEndpointTest : BaseDatabaseTest() {
 
     @Autowired
     private lateinit var mvc: MockMvc

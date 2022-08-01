@@ -1,5 +1,6 @@
 package io.realworld.article.infrastructure
 
+import io.realworld.shared.BaseDatabaseTest
 import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.test.precondition.Precondition
 import io.realworld.test.precondition.PreconditionConfiguration
@@ -29,7 +30,8 @@ import org.springframework.transaction.annotation.Transactional
 )
 @Transactional
 class SqlTagReadRepositoryTest @Autowired constructor(
-    val tagReadRepository: SqlTagReadRepository, val given: Precondition) {
+    val tagReadRepository: SqlTagReadRepository, val given: Precondition
+) : BaseDatabaseTest() {
 
     @BeforeEach
     internal fun setUp() {

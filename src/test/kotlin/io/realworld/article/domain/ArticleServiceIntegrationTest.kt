@@ -3,6 +3,7 @@ package io.realworld.article.domain
 import io.realworld.article.endpoint.CreateArticleDtoGen
 import io.realworld.article.endpoint.UpdateArticleDto
 import io.realworld.article.infrastructure.ArticleConfiguration
+import io.realworld.shared.BaseDatabaseTest
 import io.realworld.shared.Gen
 import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.test.expectation.Expectation
@@ -37,16 +38,9 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-internal class ArticleServiceIntegrationTest {
-
-    @Autowired
-    lateinit var articleService: ArticleService
-
-    @Autowired
-    lateinit var given: Precondition
-
-    @Autowired
-    lateinit var then: Expectation
+internal class ArticleServiceIntegrationTest @Autowired constructor(
+    val articleService: ArticleService, val given: Precondition, val then: Expectation
+) : BaseDatabaseTest() {
 
     lateinit var loggedUser: LoggedUser
 

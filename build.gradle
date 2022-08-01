@@ -3,7 +3,7 @@ buildscript {
         kotlinVersion = '1.7.10'
         springBootVersion = '2.7.2'
         exposedVersion ='0.38.2'
-        postgresVersion = '42.3.1'
+        postgresVersion = '42.3.6'
         jjwtVersion = '0.9.1'
         jaxbApiVersion = '2.4.0-b180830.0359'
         junitVersion = '5.8.2'
@@ -11,6 +11,7 @@ buildscript {
         mockitoKotlinVersion = '1.6.0'
         datafakerVersion = '1.5.0'
         krushVersion = '1.0.0'
+        testcontainersVersion = '1.17.3'
     }
     repositories {
         mavenCentral()
@@ -50,7 +51,6 @@ repositories {
     mavenCentral()
 }
 
-
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-security')
     implementation('org.springframework.boot:spring-boot-starter-web')
@@ -63,7 +63,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.jsonwebtoken:jjwt:$jjwtVersion")
     implementation("javax.xml.bind:jaxb-api:$jaxbApiVersion")
-
+    implementation(platform("org.testcontainers:testcontainers-bom:$testcontainersVersion"))
 
     implementation("pl.touk.krush:krush-runtime:$krushVersion")
     implementation("pl.touk.krush:krush-annotation-processor:$krushVersion")
@@ -74,11 +74,11 @@ dependencies {
     testImplementation("org.assertj:assertj-core:$assertjVersion")
     testImplementation("com.nhaarman:mockito-kotlin:$mockitoKotlinVersion")
     testImplementation("net.datafaker:datafaker:$datafakerVersion")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.postgresql:postgresql:$postgresVersion")
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.jupiter', module: 'junit-jupiter'
-    }
-    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.springframework.security:spring-security-test')
 }
 

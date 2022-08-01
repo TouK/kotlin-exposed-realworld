@@ -5,6 +5,7 @@ import io.realworld.article.domain.ArticleFavoriteService
 import io.realworld.article.domain.ArticleGen
 import io.realworld.article.infrastructure.ArticleConfiguration
 import io.realworld.security.infrastructure.SecurityConfiguration
+import io.realworld.shared.BaseDatabaseTest
 import io.realworld.shared.infrastructure.DatabaseConfiguration
 import io.realworld.shared.infrastructure.WebConfiguration
 import io.realworld.shared.refs.ArticleId
@@ -39,7 +40,7 @@ import org.springframework.transaction.annotation.Transactional
         FlywayAutoConfiguration::class
 )
 @Transactional
-class ArticleFavoriteEndpointTest {
+class ArticleFavoriteEndpointTest : BaseDatabaseTest() {
 
     @Autowired
     private lateinit var mvc: MockMvc

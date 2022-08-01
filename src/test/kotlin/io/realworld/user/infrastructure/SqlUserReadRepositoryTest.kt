@@ -1,5 +1,6 @@
 package io.realworld.user.infrastructure
 
+import io.realworld.shared.BaseDatabaseTest
 import io.realworld.shared.TestTransactionConfiguration
 import io.realworld.test.precondition.Precondition
 import io.realworld.test.precondition.PreconditionConfiguration
@@ -28,13 +29,9 @@ import org.springframework.transaction.annotation.Transactional
 )
 
 @Transactional
-internal class SqlUserReadRepositoryTest {
-
-    @Autowired
-    lateinit var given: Precondition
-
-    @Autowired
-    lateinit var userReadRepository: SqlUserReadRepository
+internal class SqlUserReadRepositoryTest @Autowired constructor(
+    val userReadRepository: SqlUserReadRepository, val given: Precondition
+) : BaseDatabaseTest() {
 
     @Test
     fun `should find user by id`() {

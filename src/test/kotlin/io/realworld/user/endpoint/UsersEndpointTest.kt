@@ -5,6 +5,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.whenever
 import io.realworld.security.infrastructure.SecurityConfiguration
+import io.realworld.shared.BaseDatabaseTest
 import io.realworld.shared.Gen
 import io.realworld.shared.refs.UserId
 import io.realworld.test.json
@@ -32,7 +33,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
         DataSourceAutoConfiguration::class,
         FlywayAutoConfiguration::class
 )
-class UsersEndpointTest {
+class UsersEndpointTest : BaseDatabaseTest() {
 
     @Autowired
     private lateinit var mvc: MockMvc
